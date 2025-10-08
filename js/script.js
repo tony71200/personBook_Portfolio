@@ -30,6 +30,9 @@ class BookState {
     clearTimeouts() {
         this.timeouts.forEach(timeout => clearTimeout(timeout));
         this.timeouts = [];
+        if (typeof pageManager !== 'undefined' && typeof pageManager.clearFaceTimers === 'function') {
+            pageManager.clearFaceTimers();
+        }
     }
 
     addTimeout(timeout) {
@@ -46,6 +49,8 @@ class PageManager {
     constructor() {
         this.pages = Array.from(document.querySelectorAll('.book-page.page-right'));
         this.totalPages = this.pages.length;
+        this.faceTimers = new Map();
+        this.syncAllFaces(true);
     }
 
     getPageIndex(page) {
@@ -81,6 +86,7 @@ class PageManager {
         this.pages.forEach((page, index) => {
             this.setZIndex(page, this.getRightStackZ(index));
         });
+        this.syncAllFaces(true);
     }
 
     setZIndex(page, zIndex) {
@@ -90,15 +96,100 @@ class PageManager {
     }
 
     turnPage(page) {
-        page?.classList.add('turn');
+        if (!page) return;
+        this.prepareFaceVisibility(page, true);
+        page.classList.add('turn');
+        this.scheduleFaceFinalization(page, true);
     }
 
     unturnPage(page) {
-        page?.classList.remove('turn');
+        if (!page) return;
+        this.prepareFaceVisibility(page, false);
+        page.classList.remove('turn');
+        this.scheduleFaceFinalization(page, false);
     }
 
     isPageTurned(page) {
         return page ? page.classList.contains('turn') : false;
+    }
+
+    getPageFaces(page) {
+        if (!page) {
+            return { front: null, back: null };
+        }
+        return {
+            front: page.querySelector('.page-front'),
+            back: page.querySelector('.page-back')
+        };
+    }
+
+    setFaceVisibility(face, visible) {
+        if (!face) return;
+        face.classList.toggle('page-face-hidden', !visible);
+        if (visible) {
+            face.removeAttribute('aria-hidden');
+        } else {
+            face.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    prepareFaceVisibility(page, turningToLeft) {
+        const { front, back } = this.getPageFaces(page);
+        this.clearFaceTimer(page);
+        if (turningToLeft) {
+            this.setFaceVisibility(back, true);
+        } else {
+            this.setFaceVisibility(front, true);
+        }
+    }
+
+    finalizeFaceVisibility(page, isTurned) {
+        const { front, back } = this.getPageFaces(page);
+        if (isTurned) {
+            this.setFaceVisibility(front, false);
+            this.setFaceVisibility(back, true);
+        } else {
+            this.setFaceVisibility(front, true);
+            this.setFaceVisibility(back, false);
+        }
+    }
+
+    scheduleFaceFinalization(page, isTurned) {
+        this.clearFaceTimer(page);
+        const timeout = setTimeout(() => {
+            this.finalizeFaceVisibility(page, isTurned);
+            this.faceTimers.delete(page);
+        }, CONFIG.ANIMATION_DURATION);
+        this.faceTimers.set(page, timeout);
+        bookState.addTimeout(timeout);
+    }
+
+    clearFaceTimer(page) {
+        if (!page) return;
+        const timeout = this.faceTimers.get(page);
+        if (timeout) {
+            clearTimeout(timeout);
+            this.faceTimers.delete(page);
+        }
+    }
+
+    clearFaceTimers() {
+        this.faceTimers.forEach(timeout => clearTimeout(timeout));
+        this.faceTimers.clear();
+    }
+
+    syncPageFaces(page, immediate = false) {
+        if (!page) return;
+        this.clearFaceTimer(page);
+        if (immediate) {
+            this.finalizeFaceVisibility(page, this.isPageTurned(page));
+        } else {
+            this.scheduleFaceFinalization(page, this.isPageTurned(page));
+        }
+    }
+
+    syncAllFaces(immediate = false) {
+        this.pages.forEach(page => this.syncPageFaces(page, immediate));
     }
 }
 

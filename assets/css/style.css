@@ -293,6 +293,12 @@ p {
     transform: rotateY(180deg) translateZ(1px);
 }
 
+.page-face-hidden {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
 .page-front .workeduc-box,
 .page-back .workeduc-box {
     max-height: calc(100% - 6rem);
