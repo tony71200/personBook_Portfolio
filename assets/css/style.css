@@ -17,10 +17,12 @@
     --second-text-color: #555;
     --white-color: #fff;
     --highlight_color: #0978a3;
-    --cover-color: linear-gradient(50%, #69bfe0, #004864);
-    --pages-color: linear-gradient(100deg, #ffffff, #b8b8b8);
+    --cover-color: linear-gradient(135deg, #69bfe0 0%, #004864 100%);
+    --pages-color: #fdfdfd;
+    --page-gradient-light: rgba(255, 255, 255, 0.55);
+    --page-gradient-dark: rgba(6, 27, 40, 0.18);
     --border: 0.125rem solid #37addb;
-    --box-shadow: 0 0 0.8rem rgba(0, 0, 0, 0.2);
+    --box-shadow: 0 2.5rem 4rem rgba(0, 0, 0, 0.25);
 
 }
 
@@ -34,6 +36,10 @@ body {
     color: var(--text-color);
     overflow: hidden;
     font-family: "Nunito", sans-serif;
+}
+
+body.modal-open {
+    overflow: hidden;
 }
 
 .wrapper {
@@ -66,8 +72,7 @@ body {
     left: 0;
     width: 50%;
     height: 100%;
-    /* background-color: var(--cover-color); */
-    background-color: var(--bg-cover-color);
+    background: var(--cover-color);
     box-shadow: var(--box-shadow);
     border-top-left-radius: 0.9rem;
     border-bottom-left-radius: 0.9rem;
@@ -96,14 +101,52 @@ body {
     perspective: 250rem;
 }
 
+
 .book .book-page {
     position: absolute;
     width: 50%;
     height: 100%;
     background: var(--pages-color);
-    box-shadow: 0 0 .6rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.4rem 1.4rem rgba(0, 0, 0, 0.15);
     display: flex;
     padding: 0.9rem;
+    overflow: hidden;
+}
+
+.book .book-page::before,
+.book .book-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: opacity .4s ease;
+}
+
+.book .book-page::before {
+    background: radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.35), transparent 45%), linear-gradient(120deg, rgba(255, 255, 255, 0.65) 0%, transparent 55%);
+    opacity: .75;
+}
+
+.book .book-page::after {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.02) 20%, transparent 55%);
+    mix-blend-mode: multiply;
+    opacity: .5;
+}
+
+.book-page.page-left::before {
+    background: linear-gradient(70deg, rgba(255, 255, 255, 0.65) 0%, transparent 55%), linear-gradient(-90deg, rgba(0, 0, 0, 0.12) 0%, transparent 40%);
+}
+
+.book-page.page-left::after {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, transparent 60%);
+}
+
+.book-page.page-right::before {
+    background: linear-gradient(-70deg, rgba(255, 255, 255, 0.6) 0%, transparent 55%), linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0%, transparent 45%);
+}
+
+.book-page.page-right::after {
+    background: linear-gradient(-90deg, rgba(0, 0, 0, 0.18) 0%, transparent 60%);
 }
 
 .book-page.page-left {
@@ -177,6 +220,8 @@ body {
 
 p {
     font-size: 0.8rem;
+    line-height: 1.65;
+    padding: 0 .55rem;
 }
 
 .profile-page .btn-box {
@@ -234,7 +279,7 @@ p {
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--pages-color);
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.97) 0%, rgba(237, 245, 249, 0.92) 55%, rgba(230, 238, 244, 0.85) 100%);
     padding: 1rem 2rem;
 }
 
@@ -267,6 +312,64 @@ p {
     padding-right: .25rem;
 }
 
+.profile-page .paragraph,
+.page-front .workeduc-box,
+.page-back .workeduc-box,
+.page-front .services-box,
+.page-back .services-box,
+.page-front .skills-box,
+.page-back .skills-box,
+.portfolio-grid {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(37, 190, 250, 0.85) rgba(9, 120, 163, 0.12);
+}
+
+.profile-page .paragraph::-webkit-scrollbar,
+.page-front .workeduc-box::-webkit-scrollbar,
+.page-back .workeduc-box::-webkit-scrollbar,
+.page-front .services-box::-webkit-scrollbar,
+.page-back .services-box::-webkit-scrollbar,
+.page-front .skills-box::-webkit-scrollbar,
+.page-back .skills-box::-webkit-scrollbar,
+.portfolio-grid::-webkit-scrollbar {
+    width: .45rem;
+}
+
+.profile-page .paragraph::-webkit-scrollbar-track,
+.page-front .workeduc-box::-webkit-scrollbar-track,
+.page-back .workeduc-box::-webkit-scrollbar-track,
+.page-front .services-box::-webkit-scrollbar-track,
+.page-back .services-box::-webkit-scrollbar-track,
+.page-front .skills-box::-webkit-scrollbar-track,
+.page-back .skills-box::-webkit-scrollbar-track,
+.portfolio-grid::-webkit-scrollbar-track {
+    background: rgba(9, 120, 163, 0.08);
+    border-radius: 1rem;
+}
+
+.profile-page .paragraph::-webkit-scrollbar-thumb,
+.page-front .workeduc-box::-webkit-scrollbar-thumb,
+.page-back .workeduc-box::-webkit-scrollbar-thumb,
+.page-front .services-box::-webkit-scrollbar-thumb,
+.page-back .services-box::-webkit-scrollbar-thumb,
+.page-front .skills-box::-webkit-scrollbar-thumb,
+.page-back .skills-box::-webkit-scrollbar-thumb,
+.portfolio-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--main-color) 0%, var(--highlight_color) 100%);
+    border-radius: 1rem;
+}
+
+.profile-page .paragraph::-webkit-scrollbar-thumb:hover,
+.page-front .workeduc-box::-webkit-scrollbar-thumb:hover,
+.page-back .workeduc-box::-webkit-scrollbar-thumb:hover,
+.page-front .services-box::-webkit-scrollbar-thumb:hover,
+.page-back .services-box::-webkit-scrollbar-thumb:hover,
+.page-front .skills-box::-webkit-scrollbar-thumb:hover,
+.page-back .skills-box::-webkit-scrollbar-thumb:hover,
+.portfolio-grid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--highlight_color) 0%, var(--main-color) 100%);
+}
+
 .title {
     text-align: center;
     font-size: x-large;
@@ -286,12 +389,14 @@ p {
 .workeduc-box .workeduc-content::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -0.65rem;
-    width: 1.2rem;
-    height: 1.2rem;
+    top: 0.15rem;
+    left: -0.85rem;
+    width: 1.35rem;
+    height: 1.35rem;
     border-radius: 50%;
-    background: linear-gradient(90deg, var(--main-color), #08fde9);
+    border: 0.125rem solid #37addb;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(101, 210, 244, 0.85) 55%, rgba(9, 120, 163, 0.95) 100%);
+    box-shadow: 0 0.25rem 0.35rem rgba(0, 0, 0, 0.15);
 }
 
 .workeduc-content .year {
@@ -451,17 +556,26 @@ p {
     padding-right: .25rem;
 }
 
+.certificate-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+
 .portfolio-item {
     border: var(--border);
     border-radius: .5rem;
     overflow: hidden;
     cursor: pointer;
-    background: #fff;
-    transition: transform .15s ease;
+    background: rgba(255, 255, 255, 0.9);
+    transition: transform .18s ease, box-shadow .18s ease;
+    display: flex;
+    flex-direction: column;
+    outline: none;
 }
 
 .portfolio-item:hover {
     transform: translateY(-2px);
+    box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.12);
 }
 
 .portfolio-item img {
@@ -472,24 +586,49 @@ p {
 }
 
 .portfolio-item .caption {
-    padding: .5rem .6rem;
+    padding: .55rem .7rem;
     font-weight: 600;
     font-size: .95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.portfolio-item .caption-sub {
+    font-weight: 500;
+    font-size: .75rem;
+    color: rgba(6, 46, 68, 0.7);
+}
+
+.portfolio-item:focus-visible {
+    box-shadow: 0 0 0 .15rem rgba(37, 190, 250, 0.45), 0 1.25rem 2.5rem rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
 }
 
 /* modal */
 .portfolio-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, .5);
-    display: none;
+    background: rgba(0, 24, 36, 0.55);
+    display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .25s ease;
     z-index: 10000;
 }
 
 .portfolio-modal.open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.portfolio-modal[hidden] {
+    display: none !important;
 }
 
 .portfolio-modal .modal-card {
@@ -520,6 +659,18 @@ p {
     width: 100%;
     height: auto;
     border-radius: .4rem;
+}
+
+.modal-meta-line {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .9rem;
+    color: var(--second-text-color);
+}
+
+.modal-meta-label {
+    color: var(--text-color);
 }
 
 .modal-actions {

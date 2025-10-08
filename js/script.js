@@ -4,7 +4,6 @@
 const CONFIG = {
     ANIMATION_DURATION: 1000,        // Thời gian animation (ms)
     PAGE_TURN_DELAY: 200,            // Delay giữa các trang (ms)
-    INITIAL_DELAY: 2100,             // Delay trước khi bắt đầu (ms)
     COVER_OPEN_DELAY: 2100,          // Delay mở bìa (ms)
     COVER_HIDE_DELAY: 2800,          // Delay ẩn bìa (ms)
     BASE_Z_INDEX: 10,                // Z-index cơ bản cho trang
@@ -18,20 +17,14 @@ const CONFIG = {
 class BookState {
     constructor() {
         this.isAnimating = false;
-        this.currentPage = 0;
         this.timeouts = [];
     }
 
     setAnimating(value) {
         this.isAnimating = value;
         const book = document.querySelector('.book');
-        if (book) {
-            if (value) {
-                book.classList.add('book-loading');
-            } else {
-                book.classList.remove('book-loading');
-            }
-        }
+        if (!book) return;
+        book.classList.toggle('book-loading', Boolean(value));
     }
 
     clearTimeouts() {
@@ -51,35 +44,28 @@ const bookState = new BookState();
 // =============================================
 class PageManager {
     constructor() {
-        this.pages = document.querySelectorAll('.book-page.page-right');
+        this.pages = Array.from(document.querySelectorAll('.book-page.page-right'));
         this.totalPages = this.pages.length;
-        this.pageNumber = this.totalPages;
-    }
-
-    getPage(index) {
-        return this.pages[index];
     }
 
     getAllPages() {
         return this.pages;
     }
 
+    getPageById(id) {
+        if (!id) return null;
+        return this.pages.find(page => page.id === id) || document.getElementById(id);
+    }
+
     getTotalPages() {
         return this.totalPages;
     }
 
-    reverseIndex() {
-        console.log("Before reserse: ", this.pageNumber);
-        this.pageNumber--;
-        if (this.pageNumber <= 0) {
-            this.resetPageNumber();
-        }
-        console.log("after reserse: ", this.pageNumber);
-        return this.pageNumber;
-    }
-
-    resetPageNumber() {
-        this.pageNumber = this.totalPages;
+    setInitialStack() {
+        const total = this.totalPages;
+        this.pages.forEach((page, index) => {
+            this.setZIndex(page, CONFIG.BASE_Z_INDEX + (total - index));
+        });
     }
 
     setZIndex(page, zIndex) {
@@ -89,15 +75,11 @@ class PageManager {
     }
 
     turnPage(page) {
-        if (page) {
-            page.classList.add('turn');
-        }
+        page?.classList.add('turn');
     }
 
     unturnPage(page) {
-        if (page) {
-            page.classList.remove('turn');
-        }
+        page?.classList.remove('turn');
     }
 
     isPageTurned(page) {
@@ -120,21 +102,9 @@ class AnimationHelper {
 
     static setZIndexWithDelay(element, zIndex, delay) {
         const timeout = setTimeout(() => {
-            pageManager.setZIndex(element, zIndex)
+            pageManager.setZIndex(element, zIndex);
         }, delay);
         bookState.addTimeout(timeout);
-    }
-
-    static async turnPageWithAnimation(page, shouldTurn, baseZIndex, index) {
-        if (!page) return;
-
-        if (shouldTurn) {
-            pageManager.turnPage(page);
-            this.setZIndexWithDelay(page, baseZIndex + index, CONFIG.ANIMATION_DURATION / 2);
-        } else {
-            pageManager.unturnPage(page);
-            this.setZIndexWithDelay(page, baseZIndex - index, CONFIG.ANIMATION_DURATION / 2);
-        }
     }
 }
 
@@ -146,61 +116,55 @@ class ButtonHandler {
         this.pageTurnButtons = document.querySelectorAll('.nextprev-btn');
         this.contactMeBtn = document.querySelector('.btn.contact-me');
         this.backProfileBtn = document.querySelector('.back-profile');
-        this.initializeButtons();
+        this.register();
     }
 
-    initializeButtons() {
-        // Next/Prev buttons
-        this.pageTurnButtons.forEach((btn, index) => {
-            btn.addEventListener('click', () => this.handlePageTurnClick(btn, index));
+    register() {
+        this.pageTurnButtons.forEach(btn => {
+            btn.addEventListener('click', () => this.handlePageTurnClick(btn));
         });
 
-        // Contact Me button
         if (this.contactMeBtn) {
-            this.contactMeBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+            this.contactMeBtn.addEventListener('click', (event) => {
+                event.preventDefault();
                 this.handleContactMeClick();
             });
         }
 
-        // Back Profile button
         if (this.backProfileBtn) {
-            this.backProfileBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+            this.backProfileBtn.addEventListener('click', (event) => {
+                event.preventDefault();
                 this.handleBackProfileClick();
             });
         }
     }
 
-    handlePageTurnClick(btn, index) {
+    handlePageTurnClick(btn) {
         if (bookState.isAnimating) return;
+
+        const pageId = btn.getAttribute('data-page');
+        const pageTurn = pageManager.getPageById(pageId);
+        if (!pageTurn) return;
 
         bookState.setAnimating(true);
 
-        const pageTurnId = btn.getAttribute('data-page');
-        const pageTurn = document.getElementById(pageTurnId);
+        const pages = pageManager.getAllPages();
+        const pageIndex = pages.indexOf(pageTurn);
+        const total = pageManager.getTotalPages();
+        const stackOffset = total - pageIndex;
 
-        if (!pageTurn) {
-            bookState.setAnimating(false);
-            return;
-        }
-
-        const isTurned = pageManager.isPageTurned(pageTurn);
-
-        if (isTurned) {
-            // Close page
+        if (pageManager.isPageTurned(pageTurn)) {
             pageManager.unturnPage(pageTurn);
             AnimationHelper.setZIndexWithDelay(
                 pageTurn,
-                CONFIG.BASE_Z_INDEX - index,
+                CONFIG.BASE_Z_INDEX + stackOffset,
                 CONFIG.ANIMATION_DURATION / 2
             );
         } else {
-            // Open page
             pageManager.turnPage(pageTurn);
             AnimationHelper.setZIndexWithDelay(
                 pageTurn,
-                CONFIG.BASE_Z_INDEX + index,
+                CONFIG.BASE_Z_INDEX + total + stackOffset,
                 CONFIG.ANIMATION_DURATION / 2
             );
         }
@@ -221,10 +185,8 @@ class ButtonHandler {
 
         for (let index = 0; index < pages.length; index++) {
             await AnimationHelper.wait((index + 1) * CONFIG.PAGE_TURN_DELAY + 100);
-
             const page = pages[index];
             pageManager.turnPage(page);
-
             AnimationHelper.setZIndexWithDelay(
                 page,
                 CONFIG.CONTACT_Z_INDEX + index,
@@ -242,21 +204,15 @@ class ButtonHandler {
         bookState.setAnimating(true);
         bookState.clearTimeouts();
 
-        const pages = pageManager.getAllPages();
-        pageManager.resetPageNumber();
+        const reversedPages = [...pageManager.getAllPages()].reverse();
 
-        for (let index = 0; index < pages.length; index++) {
+        for (let index = 0; index < reversedPages.length; index++) {
             await AnimationHelper.wait((index + 1) * CONFIG.PAGE_TURN_DELAY + 100);
-
-            const currentPageIndex = pageManager.reverseIndex();
-            const page = pages[currentPageIndex];
-
+            const page = reversedPages[index];
             pageManager.unturnPage(page);
-
-            const nextPageIndex = pageManager.reverseIndex();
             AnimationHelper.setZIndexWithDelay(
-                pages[nextPageIndex],
-                CONFIG.BASE_Z_INDEX + index,
+                page,
+                CONFIG.BASE_Z_INDEX + index + 1,
                 CONFIG.ANIMATION_DURATION / 2
             );
         }
@@ -272,57 +228,200 @@ class ButtonHandler {
 class OpeningAnimation {
     constructor() {
         this.coverRight = document.querySelector('.cover.cover-right');
-        this.pageLeft = document.querySelector('.book-page.page-left');
     }
 
     async start() {
-        bookState.setAnimating(true);
+        const pages = pageManager.getAllPages();
+        if (!pages.length) return;
 
-        // Open cover
+        bookState.setAnimating(true);
+        bookState.clearTimeouts();
+
+        // chuẩn hóa vị trí z-index và trạng thái ban đầu
+        pageManager.setInitialStack();
+        pages.forEach(page => pageManager.turnPage(page));
+
         await AnimationHelper.wait(CONFIG.COVER_OPEN_DELAY);
         if (this.coverRight) {
             this.coverRight.classList.add('turn');
+            this.coverRight.style.zIndex = CONFIG.COVER_Z_INDEX;
         }
 
-        // Hide cover
         await AnimationHelper.wait(CONFIG.COVER_HIDE_DELAY - CONFIG.COVER_OPEN_DELAY);
         if (this.coverRight) {
             this.coverRight.style.zIndex = -1;
         }
 
-        // Reverse all pages
-        const pages = pageManager.getAllPages();
-        pageManager.resetPageNumber();
-
-        for (let index = 0; index < pages.length; index++) {
-            await AnimationHelper.wait((index + 1) * CONFIG.PAGE_TURN_DELAY);
-            console.log("Index: ", index);
-            const currentPageIndex = pageManager.reverseIndex();
-            console.log("currentPage", currentPageIndex);
-            const page = pages[currentPageIndex];
-
+        for (let index = pages.length - 1; index >= 0; index--) {
+            await AnimationHelper.wait(CONFIG.PAGE_TURN_DELAY);
+            const page = pages[index];
             pageManager.unturnPage(page);
-
-            // const nextPageIndex = pageManager.reverseIndex();
-            // console.log("nextPage", nextPageIndex);
-            // AnimationHelper.setZIndexWithDelay(
-            //     pages[nextPageIndex],
-            //     CONFIG.BASE_Z_INDEX + index,
-            //     CONFIG.ANIMATION_DURATION / 2
-            // );
-        }
-
-        const nextPageIndex = pageManager.reverseIndex();
-            console.log("nextPage", nextPageIndex);
             AnimationHelper.setZIndexWithDelay(
-                pages[nextPageIndex],
-                CONFIG.BASE_Z_INDEX,
+                page,
+                CONFIG.BASE_Z_INDEX + (pages.length - index),
                 CONFIG.ANIMATION_DURATION / 2
             );
+        }
 
         await AnimationHelper.wait(CONFIG.ANIMATION_DURATION);
         bookState.setAnimating(false);
-        this.pageLeft;
+    }
+}
+
+// =============================================
+// PORTFOLIO & CERTIFICATE MODAL
+// =============================================
+class GalleryModal {
+    constructor() {
+        this.modal = document.querySelector('.portfolio-modal');
+        if (!this.modal) return;
+
+        this.closeBtn = this.modal.querySelector('.modal-close');
+        this.titleEl = this.modal.querySelector('.modal-title');
+        this.imageEl = this.modal.querySelector('.modal-image');
+        this.metaRow = this.modal.querySelector('.modal-meta-line');
+        this.metaLabelEl = this.modal.querySelector('.modal-meta-label');
+        this.metaValueEl = this.modal.querySelector('.modal-meta-value');
+        this.descEl = this.modal.querySelector('.modal-desc');
+        this.liveBtn = this.modal.querySelector('.modal-live');
+        this.codeBtn = this.modal.querySelector('.modal-code');
+        this.actions = this.modal.querySelector('.modal-actions');
+        this.activeTrigger = null;
+        this.boundHandleKeydown = this.handleKeydown.bind(this);
+
+        this.registerBaseEvents();
+    }
+
+    registerBaseEvents() {
+        if (this.closeBtn) {
+            this.closeBtn.addEventListener('click', () => this.hide());
+        }
+
+        this.modal.addEventListener('click', (event) => {
+            if (event.target === this.modal) {
+                this.hide();
+            }
+        });
+    }
+
+    registerTriggers(selectors = []) {
+        if (!this.modal) return;
+
+        selectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(element => {
+                if (!element.hasAttribute('tabindex')) {
+                    element.setAttribute('tabindex', '0');
+                }
+                if (!element.hasAttribute('role')) {
+                    element.setAttribute('role', 'button');
+                }
+                element.addEventListener('click', () => this.openFromElement(element));
+                element.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        this.openFromElement(element);
+                    }
+                });
+            });
+        });
+    }
+
+    openFromElement(element) {
+        if (!this.modal) return;
+
+        this.activeTrigger = element;
+        const dataset = element.dataset || {};
+
+        const title = dataset.title || element.getAttribute('aria-label') || 'Preview';
+        this.titleEl.textContent = title;
+
+        const imageSrc = dataset.img || element.querySelector('img')?.getAttribute('src');
+        if (imageSrc) {
+            this.imageEl.src = imageSrc;
+            this.imageEl.alt = title;
+            this.imageEl.hidden = false;
+        } else {
+            this.imageEl.hidden = true;
+        }
+
+        const metaLabel = dataset.metaLabel || (dataset.tech ? 'Tech' : 'Details');
+        const metaValue = dataset.meta || dataset.tech || '';
+        if (metaValue) {
+            this.metaLabelEl.textContent = metaLabel;
+            this.metaValueEl.textContent = metaValue;
+            this.metaRow.hidden = false;
+        } else {
+            this.metaRow.hidden = true;
+        }
+
+        const description = dataset.desc || '';
+        if (description) {
+            this.descEl.textContent = description;
+            this.descEl.hidden = false;
+        } else {
+            this.descEl.textContent = '';
+            this.descEl.hidden = true;
+        }
+
+        this.setupLink(this.liveBtn, dataset.live, dataset.liveLabel || 'Live Preview');
+        this.setupLink(this.codeBtn, dataset.code, dataset.codeLabel || 'Source Code');
+
+        const hasLinks = [this.liveBtn, this.codeBtn].some(btn => btn && !btn.hasAttribute('hidden'));
+        this.actions.hidden = !hasLinks;
+
+        this.modal.hidden = false;
+        this.modal.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(() => {
+            this.modal.classList.add('open');
+        });
+
+        document.body.classList.add('modal-open');
+        document.addEventListener('keydown', this.boundHandleKeydown);
+        this.closeBtn?.focus();
+    }
+
+    setupLink(link, href, label) {
+        if (!link) return;
+        const value = typeof href === 'string' ? href.trim() : '';
+        const isValid = value && value !== '#';
+        if (isValid) {
+            link.href = value;
+            link.textContent = label;
+            link.removeAttribute('hidden');
+        } else {
+            link.setAttribute('hidden', '');
+        }
+    }
+
+    hide() {
+        if (!this.modal || this.modal.hidden) return;
+
+        this.modal.classList.remove('open');
+        this.modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        document.removeEventListener('keydown', this.boundHandleKeydown);
+
+        const finishClose = () => {
+            this.modal.hidden = true;
+            if (this.activeTrigger) {
+                this.activeTrigger.focus();
+                this.activeTrigger = null;
+            }
+        };
+
+        const { transitionDuration, transitionDelay } = getComputedStyle(this.modal);
+        const totalDuration = parseFloat(transitionDuration) + parseFloat(transitionDelay);
+        if (totalDuration > 0) {
+            this.modal.addEventListener('transitionend', finishClose, { once: true });
+        } else {
+            finishClose();
+        }
+    }
+
+    handleKeydown(event) {
+        if (event.key === 'Escape') {
+            this.hide();
+        }
     }
 }
 
@@ -330,29 +429,29 @@ class OpeningAnimation {
 // INITIALIZATION
 // =============================================
 function initializeBook() {
-    // Initialize button handlers
+    pageManager.setInitialStack();
     new ButtonHandler();
 
-    // Start opening animation
     const openingAnimation = new OpeningAnimation();
     openingAnimation.start();
 
-    // Prevent form submission
+    const galleryModal = new GalleryModal();
+    galleryModal.registerTriggers(['.portfolio-item', '.certificate-item']);
+
     const contactForm = document.querySelector('.contact-box form');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+        contactForm.addEventListener('submit', (event) => {
+            event.preventDefault();
             alert('Form submitted! (This is a demo)');
         });
     }
 
-    // Prevent default link behavior
     document.querySelectorAll('a[href="#"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (!link.classList.contains('contact-me') && !link.classList.contains('back-profile')) {
-                e.preventDefault();
-            }
-        });
+        if (!link.classList.contains('contact-me') && !link.classList.contains('back-profile')) {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+            });
+        }
     });
 }
 
@@ -361,17 +460,9 @@ function initializeBook() {
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
     initializeBook();
-    console.log('📖 Portfolio Book Initialized');
-    console.log('✅ All issues fixed:');
-    console.log('   - Animation locking implemented');
-    console.log('   - Race conditions prevented');
-    console.log('   - Timeout cleanup on page unload');
-    console.log('   - Scalable configuration');
-    console.log('   - Easy to add new pages');
-    console.log(`   - Total pages: ${pageManager.getTotalPages()}`);
+    console.info('📖 Portfolio Book Initialized');
 });
 
-// Cleanup on page unload
 window.addEventListener('beforeunload', () => {
     bookState.clearTimeouts();
 });
