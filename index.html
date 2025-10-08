@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-site-title>3D- Portfolio Book</title>
+  <link rel="shortcut icon" type="image/x-icon" data-meta-icon href="./assets/images/Logo.ico">
+  <!-- BoxIcon -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <!--
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- style -->
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="cover cover-left"></div>
+    <div class="cover cover-right"></div>
+
+    <div class="book">
+      <!-- profile page -->
+      <div class="book-page page-left">
+        <div class="profile-page">
+          <img src="./assets/images/placeholders/no-image-3x4.svg" alt="" data-profile-avatar />
+          <h1 data-profile-name>Mr Tony</h1>
+          <div class="title-list" data-profile-titles>
+            <h3>Web Developer</h3>
+          </div>
+
+          <div class="social-media" data-social-media>
+            <a href="#"><i class="bx bxl-facebook"></i></a>
+            <a href="#"><i class="bx bxl-twitter"></i></a>
+            <a href="#"><i class="bx bxl-instagram"></i></a>
+            <a href="#"><i class="bx bxl-linkedin-square"></i></a>
+          </div>
+          <div class="paragraph" data-about>
+            <p>
+              Hi, I'm a web Developer. Lorem ipsum dolor sit amet
+              consectetur adipisicing elit. Neque commodi numquam dolor a
+              deserunt incidunt esse molestias voluptatum porro ullam.
+            </p>
+          </div>
+
+
+          <div class="btn-box">
+            <a href="#" class="btn" data-cv>Download CV</a>
+            <a href="#" class="btn contact-me">Contact Me!</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- page 1 & 2 -->
+      <div class="book-page page-right turn" id="turn-1">
+        <!-- page 1 (work experience) -->
+        <div class="page-front">
+          <h1 class="title">Work Experience</h1>
+
+          <div class="workeduc-box" data-experience>
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-calendar"></i>2018 - 2020</span>
+              <h3>Web Developer - Software Pro</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestiae minus eius nemo. Optio cupiditate nostrum commodi
+                repellendus nemo quod in?
+              </p>
+            </div>
+
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-calendar"></i>2021 - 2022</span>
+              <h3>Web Designer - Software Pro</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestiae minus eius nemo. Optio cupiditate nostrum commodi
+                repellendus nemo quod in?
+              </p>
+            </div>
+
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-calendar"></i>2022 - 2023</span>
+              <h3>Graphic Designer - Software Pro</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestiae minus eius nemo. Optio cupiditate nostrum commodi
+                repellendus nemo quod in?
+              </p>
+            </div>
+          </div>
+          <span class="number-page">1</span>
+
+          <!-- next button -->
+          <span class="nextprev-btn" data-page="turn-1">
+            <i class="bx bx-chevron-right"></i>
+          </span>
+        </div>
+
+        <!-- page 2 (education) -->
+        <div class="page-back">
+          <h1 class="title">Education</h1>
+
+          <div class="workeduc-box" data-education>
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-calendar"></i>2016 - 2018</span>
+              <h3>College</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestiae minus eius nemo. Optio cupiditate nostrum commodi
+                repellendus nemo quod in?
+              </p>
+            </div>
+
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-calendar"></i>2018 - 2020</span>
+              <h3>Intermediate</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestiae minus eius nemo. Optio cupiditate nostrum commodi
+                repellendus nemo quod in?
+              </p>
+            </div>
+
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-calendar"></i>2020 - 2024</span>
+              <h3>BS Computer Science</h3>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Molestiae minus eius nemo. Optio cupiditate nostrum commodi
+                repellendus nemo quod in?
+              </p>
+            </div>
+          </div>
+
+          <span class="number-page">2</span>
+
+          <!-- prev button -->
+          <span class="nextprev-btn back" data-page="turn-1">
+            <i class="bx bx-chevron-left"></i>
+          </span>
+        </div>
+      </div>
+
+
+      <!-- page 3 & 4 -->
+      <div class="book-page page-right turn" id="turn-2">
+        <!-- page 3 (my services) -->
+        <div class="page-front">
+          <h1 class="title">My Services</h1>
+
+          <div class="services-box">
+            <div class="services-content">
+              <i class="bx bx-code-alt"></i>
+              <h3>Web Development</h3>
+              <p>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
+                quae accusamus aliquam.
+              </p>
+              <a href="#" class="btn">Read More</a>
+            </div>
+
+            <div class="services-content">
+              <i class="bx bxs-paint"></i>
+              <h3>Creative Design</h3>
+              <p>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
+                quae accusamus aliquam.
+              </p>
+              <a href="#" class="btn">Read More</a>
+            </div>
+
+            <div class="services-content">
+              <i class="bx bx-bar-chart-alt"></i>
+              <h3>Digital Marketing</h3>
+              <p>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
+                quae accusamus aliquam.
+              </p>
+              <a href="#" class="btn">Read More</a>
+            </div>
+
+            <div class="services-content">
+              <i class="bx bx-search"></i>
+              <h3>SEO</h3>
+              <p>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
+                quae accusamus aliquam.
+              </p>
+              <a href="#" class="btn">Read More</a>
+            </div>
+          </div>
+
+          <span class="number-page">3</span>
+
+          <!-- next button -->
+          <span class="nextprev-btn" data-page="turn-2">
+            <i class="bx bx-chevron-right"></i>
+          </span>
+
+        </div>
+        <!-- page 4 (my skills) -->
+        <div class="page-back">
+          <h1 class="title">My Skills</h1>
+
+          <div class="skills-box">
+            <div class="skills-content">
+              <h3>Front-End</h3>
+              <div class="content">
+                <span><i class="bx bxl-html5"></i> HTML</span>
+                <span><i class="bx bxl-css3"></i>CSS</span>
+                <span><i class="bx bxl-javascript"></i>JS</span>
+                <span><i class="bx bxl-angular"></i>Angular</span>
+                <span><i class="bx bxl-react"></i>React Js</span>
+                <span><i class="bx bxl-bootstrap"></i>BootStrap</span>
+                <span><i class="bx bxl-jquery"></i>Jquery</span>
+              </div>
+            </div>
+
+            <div class="skills-content">
+              <h3>Back-End</h3>
+              <div class="content">
+                <span><i class="bx bxl-python"></i>Python</span>
+                <span><i class="bx bxl-java"></i>Java</span>
+                <span><i class="bx bxl-nodejs"></i>Node JS</span>
+                <span><i class="bx bxl-php"></i>PHP</span>
+              </div>
+            </div>
+
+            <div class="skills-content">
+              <h3>UI/UX Design</h3>
+              <div class="content">
+                <span><i class="bx bxl-figma"></i>Figma</span>
+              </div>
+            </div>
+          </div>
+
+          <span class="number-page">4</span>
+
+          <!-- next button -->
+          <span class="nextprev-btn back" data-page="turn-2">
+            <i class="bx bx-chevron-left"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- page 5 & 6 -->
+      <div class="book-page page-right turn" id="turn-3">
+        <!-- page 5 (Portfolio grid) -->
+        <div class="page-front">
+          <h1 class="title">Portfolio</h1>
+
+          <div class="portfolio-grid">
+            <!-- ví dụ items; sửa src/link theo data thật -->
+            <div class="portfolio-item" data-title="Project A" data-tech="HTML, CSS, JS" data-live="#" data-code="#"
+              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project A.">
+              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project A">
+              <div class="caption">Project A</div>
+            </div>
+
+            <div class="portfolio-item" data-title="Project B" data-tech="React, Node" data-live="#" data-code="#"
+              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project B.">
+              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project B">
+              <div class="caption">Project B</div>
+            </div>
+
+            <!-- thêm item theo nhu cầu -->
+          </div>
+
+          <span class="number-page">5</span>
+          <span class="nextprev-btn" data-page="turn-3">
+            <i class="bx bx-chevron-right"></i>
+          </span>
+        </div>
+
+        <!-- page 6 (Certificates) -->
+        <div class="page-back">
+          <h1 class="title">Certificates</h1>
+
+          <!-- bạn có thể đổi thành grid tương tự portfolio-grid -->
+          <div class="workeduc-box" data-certificates>
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-badge-check"></i> 2023</span>
+              <h3>Certificate Name A</h3>
+              <p>Mô tả ngắn về chứng chỉ A (đơn vị cấp, nội dung chính, ID…).</p>
+            </div>
+            <div class="workeduc-content">
+              <span class="year"><i class="bx bxs-badge-check"></i> 2024</span>
+              <h3>Certificate Name B</h3>
+              <p>Mô tả ngắn về chứng chỉ B.</p>
+            </div>
+          </div>
+
+          <span class="number-page">6</span>
+          <span class="nextprev-btn back" data-page="turn-3">
+            <i class="bx bx-chevron-left"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- page 7 & 8 -->
+      <div class="book-page page-right turn" id="turn-4">
+        <!-- page 7 (Contact Me!) -->
+        <div class="page-front">
+          <h1 class="title">Contact Me!</h1>
+
+          <div class="contact-box">
+            <form action="">
+              <input type="text" class="field" placeholder="Full Name" required>
+              <input type="email" class="field" placeholder="Email Address" required>
+              <textarea cols="30" rows="10" class="field" placeholder="Your Message"></textarea>
+              <input type="submit" value="Send Message" class="btn">
+            </form>
+          </div>
+
+          <span class="number-page">7</span>
+          <span class="nextprev-btn" data-page="turn-4">
+            <i class="bx bx-chevron-right"></i>
+          </span>
+          <a href="#" class="back-profile">
+            <p>Profile</p>
+            <i class="bx bxs-user"></i>
+          </a>
+        </div>
+
+        <!-- page 8 (back-profile)
+        <div class="page-back">
+          <h1 class="title">Thanks!</h1>
+          <p style="margin-top:1rem">Cảm ơn bạn đã xem qua portfolio của mình.</p>
+
+          <span class="number-page">8</span>
+          <span class="nextprev-btn back" data-page="turn-4">
+            <i class="bx bx-chevron-left"></i>
+          </span>
+
+          <a href="#" class="back-profile">
+            <p>Profile</p>
+            <i class="bx bxs-user"></i>
+          </a>
+        </div> -->
+      </div>
+
+      <!-- Modal (dán cuối .book, trước </div> book) -->
+      <div class="portfolio-modal" aria-hidden="true" hidden>
+        <div class="modal-card">
+          <div class="modal-head">
+            <strong class="modal-title">Title</strong>
+            <button class="modal-close" title="Close">✕</button>
+          </div>
+          <div class="modal-body">
+            <img class="modal-image" src="" alt="Preview">
+            <div class="modal-meta">
+              <p class="modal-tech" style="margin-top:.6rem;"><strong>Tech:</strong> </p>
+              <p class="modal-desc" style="margin-top:.25rem;"></p>
+            </div>
+            <div class="modal-actions" style="margin-top:.6rem;">
+              <a class="btn modal-live" href="#" target="_blank" rel="noreferrer">Live Preview</a>
+              <a class="btn modal-code" href="#" target="_blank" rel="noreferrer">Source Code</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- script -->
+    <script src="./js/script.js"></script>
+    <script src="./js/update.js" data-json-url="./js/data.json"></script>
+</body>
+
+</html>
