@@ -48,6 +48,10 @@ class PageManager {
         this.totalPages = this.pages.length;
     }
 
+    getPageIndex(page) {
+        return this.pages.indexOf(page);
+    }
+
     getAllPages() {
         return this.pages;
     }
@@ -61,10 +65,21 @@ class PageManager {
         return this.totalPages;
     }
 
+    getRightStackZ(index) {
+        return CONFIG.BASE_Z_INDEX + (this.totalPages - index);
+    }
+
+    getLeftStackZ(order) {
+        return CONFIG.BASE_Z_INDEX + this.totalPages + order;
+    }
+
+    countTurnedPages() {
+        return this.pages.reduce((count, page) => count + (this.isPageTurned(page) ? 1 : 0), 0);
+    }
+
     setInitialStack() {
-        const total = this.totalPages;
         this.pages.forEach((page, index) => {
-            this.setZIndex(page, CONFIG.BASE_Z_INDEX + (total - index));
+            this.setZIndex(page, this.getRightStackZ(index));
         });
     }
 
@@ -150,21 +165,21 @@ class ButtonHandler {
 
         const pages = pageManager.getAllPages();
         const pageIndex = pages.indexOf(pageTurn);
-        const total = pageManager.getTotalPages();
-        const stackOffset = total - pageIndex;
+        const turnedCount = pageManager.countTurnedPages();
 
         if (pageManager.isPageTurned(pageTurn)) {
             pageManager.unturnPage(pageTurn);
             AnimationHelper.setZIndexWithDelay(
                 pageTurn,
-                CONFIG.BASE_Z_INDEX + stackOffset,
+                pageManager.getRightStackZ(pageIndex),
                 CONFIG.ANIMATION_DURATION / 2
             );
         } else {
+            const order = turnedCount + 1;
             pageManager.turnPage(pageTurn);
             AnimationHelper.setZIndexWithDelay(
                 pageTurn,
-                CONFIG.BASE_Z_INDEX + total + stackOffset,
+                pageManager.getLeftStackZ(order),
                 CONFIG.ANIMATION_DURATION / 2
             );
         }
@@ -210,9 +225,10 @@ class ButtonHandler {
             await AnimationHelper.wait((index + 1) * CONFIG.PAGE_TURN_DELAY + 100);
             const page = reversedPages[index];
             pageManager.unturnPage(page);
+            const originalIndex = pageManager.getPageIndex(page);
             AnimationHelper.setZIndexWithDelay(
                 page,
-                CONFIG.BASE_Z_INDEX + index + 1,
+                pageManager.getRightStackZ(originalIndex),
                 CONFIG.ANIMATION_DURATION / 2
             );
         }
@@ -258,7 +274,7 @@ class OpeningAnimation {
             pageManager.unturnPage(page);
             AnimationHelper.setZIndexWithDelay(
                 page,
-                CONFIG.BASE_Z_INDEX + (pages.length - index),
+                pageManager.getRightStackZ(index),
                 CONFIG.ANIMATION_DURATION / 2
             );
         }
