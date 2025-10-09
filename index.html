@@ -255,13 +255,15 @@
 
           <div class="portfolio-grid">
             <!-- ví dụ items; sửa src/link theo data thật -->
-            <div class="portfolio-item" data-title="Project A" data-tech="HTML, CSS, JS" data-live="#" data-code="#"
+            <div class="portfolio-item" tabindex="0" role="button"
+              data-title="Project A" data-tech="HTML, CSS, JS" data-live="#" data-code="#"
               data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project A.">
               <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project A">
               <div class="caption">Project A</div>
             </div>
 
-            <div class="portfolio-item" data-title="Project B" data-tech="React, Node" data-live="#" data-code="#"
+            <div class="portfolio-item" tabindex="0" role="button"
+              data-title="Project B" data-tech="React, Node" data-live="#" data-code="#"
               data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project B.">
               <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project B">
               <div class="caption">Project B</div>
@@ -280,17 +282,27 @@
         <div class="page-back">
           <h1 class="title">Certificates</h1>
 
-          <!-- bạn có thể đổi thành grid tương tự portfolio-grid -->
-          <div class="workeduc-box" data-certificates>
-            <div class="workeduc-content">
-              <span class="year"><i class="bx bxs-badge-check"></i> 2023</span>
-              <h3>Certificate Name A</h3>
-              <p>Mô tả ngắn về chứng chỉ A (đơn vị cấp, nội dung chính, ID…).</p>
+          <div class="portfolio-grid certificate-grid">
+            <div class="portfolio-item certificate-item" tabindex="0" role="button"
+              data-title="Certificate Name A" data-meta-label="Issuer" data-meta="Coursera"
+              data-live="" data-code="" data-img="assets/images/placeholders/no-image-3x4.svg"
+              data-desc="Mô tả ngắn về chứng chỉ A (đơn vị cấp, nội dung chính, ID…).">
+              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Certificate Name A">
+              <div class="caption">
+                <span class="caption-title">Certificate Name A</span>
+                <span class="caption-sub">2023</span>
+              </div>
             </div>
-            <div class="workeduc-content">
-              <span class="year"><i class="bx bxs-badge-check"></i> 2024</span>
-              <h3>Certificate Name B</h3>
-              <p>Mô tả ngắn về chứng chỉ B.</p>
+
+            <div class="portfolio-item certificate-item" tabindex="0" role="button"
+              data-title="Certificate Name B" data-meta-label="Issuer" data-meta="Udemy"
+              data-live="" data-code="" data-img="assets/images/placeholders/no-image-3x4.svg"
+              data-desc="Mô tả ngắn về chứng chỉ B.">
+              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Certificate Name B">
+              <div class="caption">
+                <span class="caption-title">Certificate Name B</span>
+                <span class="caption-sub">2024</span>
+              </div>
             </div>
           </div>
 
@@ -344,7 +356,7 @@
       </div>
 
       <!-- Modal (dán cuối .book, trước </div> book) -->
-      <div class="portfolio-modal" aria-hidden="true" hidden>
+      <div class="portfolio-modal" aria-hidden="true" hidden role="dialog" aria-modal="true">
         <div class="modal-card">
           <div class="modal-head">
             <strong class="modal-title">Title</strong>
@@ -353,7 +365,10 @@
           <div class="modal-body">
             <img class="modal-image" src="" alt="Preview">
             <div class="modal-meta">
-              <p class="modal-tech" style="margin-top:.6rem;"><strong>Tech:</strong> </p>
+              <p class="modal-meta-line" style="margin-top:.6rem;">
+                <strong class="modal-meta-label">Tech:</strong>
+                <span class="modal-meta-value"></span>
+              </p>
               <p class="modal-desc" style="margin-top:.25rem;"></p>
             </div>
             <div class="modal-actions" style="margin-top:.6rem;">
