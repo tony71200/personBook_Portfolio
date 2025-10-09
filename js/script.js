@@ -33,6 +33,9 @@ class BookState {
         if (typeof pageManager !== 'undefined' && typeof pageManager.clearFaceTimers === 'function') {
             pageManager.clearFaceTimers();
         }
+        if (typeof pageManager !== 'undefined' && typeof pageManager.clearMidTurnTimers === 'function') {
+            pageManager.clearMidTurnTimers();
+        }
     }
 
     addTimeout(timeout) {
@@ -50,6 +53,7 @@ class PageManager {
         this.pages = Array.from(document.querySelectorAll('.book-page.page-right'));
         this.totalPages = this.pages.length;
         this.faceTimers = new Map();
+        this.midTurnTimers = new Map();
         this.syncAllFaces(true);
     }
 
@@ -136,13 +140,14 @@ class PageManager {
     prepareFaceVisibility(page, turningToLeft) {
         const { front, back } = this.getPageFaces(page);
         this.clearFaceTimer(page);
-        const faceToReveal = turningToLeft ? back : front;
-        const oppositeFace = turningToLeft ? front : back;
+        this.clearMidTurnTimer(page);
 
-        this.setFaceVisibility(oppositeFace, true);
-        if (faceToReveal) {
-            requestAnimationFrame(() => this.setFaceVisibility(faceToReveal, true));
-        }
+        const faceCurrentlyVisible = turningToLeft ? front : back;
+        const faceToReveal = turningToLeft ? back : front;
+
+        this.setFaceVisibility(faceCurrentlyVisible, true);
+        this.setFaceVisibility(faceToReveal, false);
+        this.scheduleMidTurnVisibility(page, turningToLeft);
     }
 
     finalizeFaceVisibility(page, isTurned) {
@@ -166,6 +171,25 @@ class PageManager {
         bookState.addTimeout(timeout);
     }
 
+    scheduleMidTurnVisibility(page, turningToLeft) {
+        const { front, back } = this.getPageFaces(page);
+        const faceToReveal = turningToLeft ? back : front;
+        const faceToHide = turningToLeft ? front : back;
+        const halfDuration = CONFIG.ANIMATION_DURATION / 2;
+
+        const revealTimeout = setTimeout(() => {
+            this.setFaceVisibility(faceToReveal, true);
+        }, Math.max(0, halfDuration - 40));
+
+        const hideTimeout = setTimeout(() => {
+            this.setFaceVisibility(faceToHide, false);
+        }, halfDuration + 40);
+
+        this.midTurnTimers.set(page, { revealTimeout, hideTimeout });
+        bookState.addTimeout(revealTimeout);
+        bookState.addTimeout(hideTimeout);
+    }
+
     clearFaceTimer(page) {
         if (!page) return;
         const timeout = this.faceTimers.get(page);
@@ -175,14 +199,34 @@ class PageManager {
         }
     }
 
+    clearMidTurnTimer(page) {
+        if (!page) return;
+        const timers = this.midTurnTimers.get(page);
+        if (!timers) return;
+
+        const { revealTimeout, hideTimeout } = timers;
+        if (revealTimeout) clearTimeout(revealTimeout);
+        if (hideTimeout) clearTimeout(hideTimeout);
+        this.midTurnTimers.delete(page);
+    }
+
     clearFaceTimers() {
         this.faceTimers.forEach(timeout => clearTimeout(timeout));
         this.faceTimers.clear();
     }
 
+    clearMidTurnTimers() {
+        this.midTurnTimers.forEach(({ revealTimeout, hideTimeout }) => {
+            if (revealTimeout) clearTimeout(revealTimeout);
+            if (hideTimeout) clearTimeout(hideTimeout);
+        });
+        this.midTurnTimers.clear();
+    }
+
     syncPageFaces(page, immediate = false) {
         if (!page) return;
         this.clearFaceTimer(page);
+        this.clearMidTurnTimer(page);
         if (immediate) {
             this.finalizeFaceVisibility(page, this.isPageTurned(page));
         } else {
