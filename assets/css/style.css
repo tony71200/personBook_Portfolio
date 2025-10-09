@@ -281,8 +281,8 @@ p {
     height: 100%;
     background: linear-gradient(120deg, rgba(255, 255, 255, 0.97) 0%, rgba(237, 245, 249, 0.92) 55%, rgba(230, 238, 244, 0.85) 100%);
     padding: 1rem 2rem;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
 }
 
 .book-page .page-front {

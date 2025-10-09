@@ -136,10 +136,12 @@ class PageManager {
     prepareFaceVisibility(page, turningToLeft) {
         const { front, back } = this.getPageFaces(page);
         this.clearFaceTimer(page);
-        if (turningToLeft) {
-            this.setFaceVisibility(back, true);
-        } else {
-            this.setFaceVisibility(front, true);
+        const faceToReveal = turningToLeft ? back : front;
+        const oppositeFace = turningToLeft ? front : back;
+
+        this.setFaceVisibility(oppositeFace, true);
+        if (faceToReveal) {
+            requestAnimationFrame(() => this.setFaceVisibility(faceToReveal, true));
         }
     }
 
@@ -346,7 +348,10 @@ class OpeningAnimation {
 
         // chuẩn hóa vị trí z-index và trạng thái ban đầu
         pageManager.setInitialStack();
-        pages.forEach(page => pageManager.turnPage(page));
+        pages.forEach((page, index) => {
+            pageManager.turnPage(page);
+            pageManager.setZIndex(page, pageManager.getLeftStackZ(index + 1));
+        });
 
         await AnimationHelper.wait(CONFIG.COVER_OPEN_DELAY);
         if (this.coverRight) {
