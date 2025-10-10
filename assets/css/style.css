@@ -301,7 +301,7 @@ p {
 
 .page-front .workeduc-box,
 .page-back .workeduc-box {
-    max-height: calc(100% - 6rem);
+    max-height: calc(100% - 5rem);
     overflow: auto;
     padding-right: .25rem;
 }
@@ -327,7 +327,8 @@ p {
 .page-back .services-box,
 .page-front .skills-box,
 .page-back .skills-box,
-.portfolio-grid {
+.portfolio-grid,
+.edu-testimonials {
     scrollbar-width: thin;
     scrollbar-color: rgba(37, 190, 250, 0.85) rgba(9, 120, 163, 0.12);
 }
@@ -339,7 +340,8 @@ p {
 .page-back .services-box::-webkit-scrollbar,
 .page-front .skills-box::-webkit-scrollbar,
 .page-back .skills-box::-webkit-scrollbar,
-.portfolio-grid::-webkit-scrollbar {
+.portfolio-grid::-webkit-scrollbar,
+.edu-testimonials::-webkit-scrollbar {
     width: .45rem;
 }
 
@@ -350,7 +352,8 @@ p {
 .page-back .services-box::-webkit-scrollbar-track,
 .page-front .skills-box::-webkit-scrollbar-track,
 .page-back .skills-box::-webkit-scrollbar-track,
-.portfolio-grid::-webkit-scrollbar-track {
+.portfolio-grid::-webkit-scrollbar-track,
+.edu-testimonials::-webkit-scrollbar-track {
     background: rgba(9, 120, 163, 0.08);
     border-radius: 1rem;
 }
@@ -362,7 +365,8 @@ p {
 .page-back .services-box::-webkit-scrollbar-thumb,
 .page-front .skills-box::-webkit-scrollbar-thumb,
 .page-back .skills-box::-webkit-scrollbar-thumb,
-.portfolio-grid::-webkit-scrollbar-thumb {
+.portfolio-grid::-webkit-scrollbar-thumb,
+.edu-testimonials::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, var(--main-color) 0%, var(--highlight_color) 100%);
     border-radius: 1rem;
 }
@@ -374,7 +378,8 @@ p {
 .page-back .services-box::-webkit-scrollbar-thumb:hover,
 .page-front .skills-box::-webkit-scrollbar-thumb:hover,
 .page-back .skills-box::-webkit-scrollbar-thumb:hover,
-.portfolio-grid::-webkit-scrollbar-thumb:hover {
+.portfolio-grid::-webkit-scrollbar-thumb:hover,
+.edu-testimonials::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, var(--highlight_color) 0%, var(--main-color) 100%);
 }
 
@@ -385,13 +390,13 @@ p {
 
 .workeduc-box {
     border-left: var(--border);
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .workeduc-box .workeduc-content {
     position: relative;
     padding-left: 1.6rem;
-    padding-bottom: 1.2rem;
+    padding-bottom: 1.1rem;
 }
 
 .workeduc-box .workeduc-content::before {
@@ -399,8 +404,8 @@ p {
     position: absolute;
     top: 0.15rem;
     left: -0.85rem;
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 1.25rem;
+    height: 1.25rem;
     border-radius: 50%;
     border: 0.125rem solid #37addb;
     background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(101, 210, 244, 0.85) 55%, rgba(9, 120, 163, 0.95) 100%);
@@ -840,4 +845,87 @@ p {
     opacity: 1;
     transform: translateX(-50%) scale(1);
     top: -1.8rem;
+}
+
+
+
+.workeduc-content p {
+  max-height: 6.5rem;
+  overflow: auto;
+  padding-right: .25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(37,190,250,.85) rgba(9,120,163,.12);
+}
+.workeduc-content p::-webkit-scrollbar { width: .45rem; }
+.workeduc-content p::-webkit-scrollbar-track { background: rgba(9,120,163,.08); border-radius: 1rem; }
+.workeduc-content p::-webkit-scrollbar-thumb { background: linear-gradient(180deg,var(--main-color) 0%, var(--highlight_color) 100%); border-radius: 1rem; }
+
+/* === Education Testimonials container === */
+.edu-testimonials {
+  margin-top: 1rem;
+  max-height: calc(100% - 22rem);
+  overflow: auto;
+  padding-right: .25rem;
+}
+.edu-testimonials .testimonials-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .75rem;
+}
+.edu-testimonials .testimonial-card {
+  border: var(--border);
+  border-radius: .5rem;
+  padding: .6rem .75rem;
+  background: rgba(255,255,255,.95);
+}
+
+/* === Modal fit screen and images scale nicely === */
+.portfolio-modal .modal-card {
+  width: min(860px, 96vw);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+}
+.portfolio-modal .modal-body {
+  overflow: auto;
+}
+.portfolio-modal .modal-image {
+  max-height: 56vh;
+  object-fit: contain;
+}
+
+/* === ContactMe rendered like About list === */
+.contact-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .55rem;
+  margin-bottom: .75rem;
+}
+.contact-list li {
+  border: var(--border);
+  border-radius: .4rem;
+  padding: .5rem .65rem;
+  background: rgba(255,255,255,.95);
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.contact-list .label { font-weight: 600; color: var(--second-text-color); }
+.contact-map iframe {
+  width: 100%;
+  height: 14rem;
+  border: 0;
+  border-radius: .4rem;
+}
+
+/* === Chatbot placeholder === */
+.chatbot-box {
+  min-height: 70%;
+  border: var(--border);
+  border-radius: .6rem;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.92);
 }

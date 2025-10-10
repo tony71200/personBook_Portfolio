@@ -135,6 +135,11 @@
               </p>
             </div>
           </div>
+          <div class="edu-testimonials" data-edu-testimonials="">
+            <h2 class="title" style="margin-top:1rem">Testimonials</h2>
+            <ul class="testimonials-list"></ul>
+          </div>
+
 
           <span class="number-page">2</span>
 
@@ -255,16 +260,16 @@
 
           <div class="portfolio-grid">
             <!-- ví dụ items; sửa src/link theo data thật -->
-            <div class="portfolio-item" tabindex="0" role="button"
-              data-title="Project A" data-tech="HTML, CSS, JS" data-live="#" data-code="#"
-              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project A.">
+            <div class="portfolio-item" tabindex="0" role="button" data-title="Project A" data-tech="HTML, CSS, JS"
+              data-live="#" data-code="#" data-img="assets/images/placeholders/no-image-3x4.svg"
+              data-desc="Mô tả ngắn gọn cho Project A.">
               <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project A">
               <div class="caption">Project A</div>
             </div>
 
-            <div class="portfolio-item" tabindex="0" role="button"
-              data-title="Project B" data-tech="React, Node" data-live="#" data-code="#"
-              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project B.">
+            <div class="portfolio-item" tabindex="0" role="button" data-title="Project B" data-tech="React, Node"
+              data-live="#" data-code="#" data-img="assets/images/placeholders/no-image-3x4.svg"
+              data-desc="Mô tả ngắn gọn cho Project B.">
               <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project B">
               <div class="caption">Project B</div>
             </div>
@@ -283,9 +288,9 @@
           <h1 class="title">Certificates</h1>
 
           <div class="portfolio-grid certificate-grid">
-            <div class="portfolio-item certificate-item" tabindex="0" role="button"
-              data-title="Certificate Name A" data-meta-label="Issuer" data-meta="Coursera"
-              data-live="" data-code="" data-img="assets/images/placeholders/no-image-3x4.svg"
+            <div class="portfolio-item certificate-item" tabindex="0" role="button" data-title="Certificate Name A"
+              data-meta-label="Issuer" data-meta="Coursera" data-live="" data-code=""
+              data-img="assets/images/placeholders/no-image-3x4.svg"
               data-desc="Mô tả ngắn về chứng chỉ A (đơn vị cấp, nội dung chính, ID…).">
               <img src="assets/images/placeholders/no-image-3x4.svg" alt="Certificate Name A">
               <div class="caption">
@@ -294,10 +299,9 @@
               </div>
             </div>
 
-            <div class="portfolio-item certificate-item" tabindex="0" role="button"
-              data-title="Certificate Name B" data-meta-label="Issuer" data-meta="Udemy"
-              data-live="" data-code="" data-img="assets/images/placeholders/no-image-3x4.svg"
-              data-desc="Mô tả ngắn về chứng chỉ B.">
+            <div class="portfolio-item certificate-item" tabindex="0" role="button" data-title="Certificate Name B"
+              data-meta-label="Issuer" data-meta="Udemy" data-live="" data-code=""
+              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn về chứng chỉ B.">
               <img src="assets/images/placeholders/no-image-3x4.svg" alt="Certificate Name B">
               <div class="caption">
                 <span class="caption-title">Certificate Name B</span>
@@ -319,40 +323,46 @@
         <div class="page-front">
           <h1 class="title">Contact Me!</h1>
 
-          <div class="contact-box">
-            <form action="">
-              <input type="text" class="field" placeholder="Full Name" required>
-              <input type="email" class="field" placeholder="Email Address" required>
-              <textarea cols="30" rows="10" class="field" placeholder="Your Message"></textarea>
-              <input type="submit" value="Send Message" class="btn">
-            </form>
+          <div class="contact-box" data-contact>
+            <ul class="contact-list"></ul>
+            <div class="contact-map" data-map=""></div>
           </div>
 
           <span class="number-page">7</span>
           <span class="nextprev-btn" data-page="turn-4">
             <i class="bx bx-chevron-right"></i>
           </span>
+
+        </div>
+
+        <!-- page 8 (back-profile)-->
+        <div class="page-back">
+          <h1 class="title">Thanks!</h1>
+          <p style="margin-top:1rem">Cảm ơn bạn đã xem qua portfolio của mình.</p>
+          <span class="nextprev-btn" data-page="turn-5"><i class="bx bx-chevron-right"></i></span><span
+            class="number-page">8</span>
+          <span class="nextprev-btn back" data-page="turn-4">
+            <i class="bx bx-chevron-left"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="book-page page-right"> <!--turn" id="turn-5">-->
+        <div class="page-front">
+          <h1 class="title">Chatbot</h1>
+          <div class="chatbot-box" data-chatbot="">
+            <div class="chatbot-placeholder">Chatbot area (coming soon)</div>
+          </div>
+          <span class="number-page">9</span>
+          <span class="nextprev-btn back" data-page="turn-5">
+            <i class="bx bx-chevron-left"></i>
+          </span>
           <a href="#" class="back-profile">
             <p>Profile</p>
             <i class="bx bxs-user"></i>
           </a>
         </div>
-
-        <!-- page 8 (back-profile)
-        <div class="page-back">
-          <h1 class="title">Thanks!</h1>
-          <p style="margin-top:1rem">Cảm ơn bạn đã xem qua portfolio của mình.</p>
-
-          <span class="number-page">8</span>
-          <span class="nextprev-btn back" data-page="turn-4">
-            <i class="bx bx-chevron-left"></i>
-          </span>
-
-          <a href="#" class="back-profile">
-            <p>Profile</p>
-            <i class="bx bxs-user"></i>
-          </a>
-        </div> -->
+        <div class="page-back"></div>
       </div>
 
       <!-- Modal (dán cuối .book, trước </div> book) -->

@@ -132,6 +132,14 @@ const setHref = (element, value) => {
     }
 };
 
+const createEl = (tag, className) => {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    return el;
+};
+const setAttr = (el, n, v) => { if (el && v != null) el.setAttribute(n, v); };
+
+
 const applyMeta = (data) => {
     const metaTitle = sourceString(data?.meta?.title);
     const metaIcon = sourceString(data?.meta?.icon);
@@ -208,10 +216,126 @@ const applyProfile = (data) => {
     downloadCV.setAttribute("href", sourceString(profile?.cv?.resume));
 };
 
+// ====== Work Experience & Education ======
+const applyWorkEducation = (data) => {
+    const expWrap = document.querySelector("[data-experience]");
+    const eduWrap = document.querySelector("[data-education]");
+    if (expWrap) {
+        expWrap.innerHTML = "";
+        const exps = Array.isArray(data?.resume?.experiences) ? data.resume.experiences : [];
+        exps.forEach(item => {
+            const li = createEl("div", "workeduc-content");
+            const year = createEl("span", "year");
+            year.innerHTML = `<i class="bx bxs-calendar"></i>${sourceString(item.dates)}`;
+            const h3 = createEl("h3"); h3.textContent = `${sourceString(item.role)} - ${sourceString(item.company)}`;
+            const p = createEl("p"); setHTML(p, sourceString(item.summaryHtml));
+            li.append(year, h3, p);
+            expWrap.appendChild(li);
+        });
+    }
+    if (eduWrap) {
+        eduWrap.innerHTML = "";
+        const edus = Array.isArray(data?.resume?.education) ? data.resume.education : [];
+        edus.forEach(item => {
+            const li = createEl("div", "workeduc-content");
+            const year = createEl("span", "year");
+            year.innerHTML = `<i class="bx bxs-calendar"></i>${sourceString(item.dates)}`;
+            const h3 = createEl("h3"); h3.textContent = sourceString(item.school);
+            const p = createEl("p"); setHTML(p, sourceString(item.summaryHtml));
+            li.append(year, h3, p);
+            eduWrap.appendChild(li);
+        });
+    }
+};
+
+// ====== Testimonials under Education ======
+const applyEduTestimonials = (data) => {
+    const wrapRoot = document.querySelector("[data-edu-testimonials]");
+    const wrap = document.querySelector("[data-edu-testimonials] .testimonials-list");
+    if (!wrapRoot || !wrap) return;
+    wrap.innerHTML = "";
+    const items = Array.isArray(data?.about?.testimonials) ? data.about.testimonials : [];
+    items.forEach(t => {
+        const li = createEl("li", "testimonial-card");
+        const name = sourceString(t.name);
+        const avatar = t?.avatar?.src;
+        const quote = sourceString(t?.quoteHtml);
+        li.innerHTML = `
+          <div style="display:flex; gap:.75rem; align-items:flex-start">
+            ${avatar ? `<img src="${avatar}" alt="${name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid #eee">` : ""}
+            <div>
+              <div style="font-weight:700;margin-bottom:.1rem">${name}</div>
+              <div class="testimonial-quote">${quote}</div>
+            </div>
+          </div>`;
+        wrap.appendChild(li);
+    });
+};
+
+// ====== Portfolio/Certificates: notify ready for modal triggers ======
+const initPortfolioModalTriggers = () => {
+    document.dispatchEvent(new Event("portfolio-ready"));
+};
+
+// ====== Contact section (About-like) ======
+const applyContact = (data) => {
+    const root = document.querySelector("[data-contact]");
+    if (!root) return;
+    const ul = root.querySelector(".contact-list");
+    const mapBox = root.querySelector("[data-map]");
+    if (ul) ul.innerHTML = "";
+
+    const contacts = data?.profile?.contacts || {};
+    const entries = Object.entries(contacts);
+    entries.forEach(([key, obj]) => {
+        const label = sourceString(obj.label || key);
+        let value = "";
+        if (obj.display) value = obj.display;
+        else if (obj.href) value = obj.href.replace(/^mailto:|^tel:/, "");
+        else if (obj.datetime) value = obj.display || obj.datetime;
+        const li = document.createElement("li");
+        li.innerHTML = `<span class="label">${label}</span><span class="value">${sourceString(value)}</span>`;
+        ul?.appendChild(li);
+    });
+
+    const loc = data?.profile?.contacts?.location?.display;
+    if (mapBox && loc) {
+        const iframe = document.createElement("iframe");
+        iframe.loading = "lazy";
+        iframe.referrerPolicy = "no-referrer-when-downgrade";
+        iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(loc)}&output=embed`;
+        mapBox.innerHTML = "";
+        mapBox.appendChild(iframe);
+    }
+};
+
+// ====== Thanks & Chatbot placeholders ======
+const applyThanks = () => {
+    const thanks = document.querySelector("[data-thanks]");
+    // reserved for future effects
+};
+const applyChatbotPlaceholder = () => {
+    const box = document.querySelector("[data-chatbot]");
+    console.log("Chatbot", box);
+    if (!box) return;
+    if (!box.querySelector('.chatbot-placeholder')) {
+        const d = document.createElement('div');
+        d.className = 'chatbot-placeholder';
+        d.textContent = '🤖 Ready for future chatbot integration';
+        box.appendChild(d);
+    }
+};
+
 const applyAll = (loadedData) => {
     console.log(loadedData);
     applyMeta(loadedData);
     applyProfile(loadedData);
+	applyWorkEducation(loadedData);
+    applyEduTestimonials(loadedData);
+    applyContact(loadedData);
+    applyThanks();
+    applyChatbotPlaceholder();
+    initPortfolioModalTriggers();
     document.dispatchEvent(new Event("site-data-updated"));
 }
 
