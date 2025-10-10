@@ -45,6 +45,8 @@ class BookState {
 
 const bookState = new BookState();
 
+let galleryModal = null;
+
 // =============================================
 // PAGE MANAGEMENT
 // =============================================
@@ -434,15 +436,15 @@ class GalleryModal {
 
         this.closeBtn = this.modal.querySelector('.modal-close');
         this.titleEl = this.modal.querySelector('.modal-title');
-        this.imageEl = this.modal.querySelector('.modal-image');
+        this.mainContainer = this.modal.querySelector('[data-modal-main]');
+        this.thumbsContainer = this.modal.querySelector('[data-modal-thumbs]');
         this.metaRow = this.modal.querySelector('.modal-meta-line');
         this.metaLabelEl = this.modal.querySelector('.modal-meta-label');
         this.metaValueEl = this.modal.querySelector('.modal-meta-value');
         this.descEl = this.modal.querySelector('.modal-desc');
-        this.liveBtn = this.modal.querySelector('.modal-live');
-        this.codeBtn = this.modal.querySelector('.modal-code');
-        this.actions = this.modal.querySelector('.modal-actions');
         this.activeTrigger = null;
+        this.currentGallery = [];
+        this.activeIndex = 0;
         this.boundHandleKeydown = this.handleKeydown.bind(this);
 
         this.registerBaseEvents();
@@ -465,6 +467,7 @@ class GalleryModal {
 
         selectors.forEach(selector => {
             document.querySelectorAll(selector).forEach(element => {
+                if (element.dataset.modalBound === 'true') return;
                 if (!element.hasAttribute('tabindex')) {
                     element.setAttribute('tabindex', '0');
                 }
@@ -478,6 +481,7 @@ class GalleryModal {
                         this.openFromElement(element);
                     }
                 });
+                element.dataset.modalBound = 'true';
             });
         });
     }
@@ -491,14 +495,8 @@ class GalleryModal {
         const title = dataset.title || element.getAttribute('aria-label') || 'Preview';
         this.titleEl.textContent = title;
 
-        const imageSrc = dataset.img || element.querySelector('img')?.getAttribute('src');
-        if (imageSrc) {
-            this.imageEl.src = imageSrc;
-            this.imageEl.alt = title;
-            this.imageEl.hidden = false;
-        } else {
-            this.imageEl.hidden = true;
-        }
+        const gallery = this.parseMediaDataset(dataset.media, element, title);
+        this.renderGallery(gallery);
 
         const metaLabel = dataset.metaLabel || (dataset.tech ? 'Tech' : 'Details');
         const metaValue = dataset.meta || dataset.tech || '';
@@ -512,18 +510,12 @@ class GalleryModal {
 
         const description = dataset.desc || '';
         if (description) {
-            this.descEl.textContent = description;
+            this.descEl.innerHTML = description;
             this.descEl.hidden = false;
         } else {
-            this.descEl.textContent = '';
+            this.descEl.innerHTML = '';
             this.descEl.hidden = true;
         }
-
-        this.setupLink(this.liveBtn, dataset.live, dataset.liveLabel || 'Live Preview');
-        this.setupLink(this.codeBtn, dataset.code, dataset.codeLabel || 'Source Code');
-
-        const hasLinks = [this.liveBtn, this.codeBtn].some(btn => btn && !btn.hasAttribute('hidden'));
-        this.actions.hidden = !hasLinks;
 
         this.modal.hidden = false;
         this.modal.setAttribute('aria-hidden', 'false');
@@ -536,17 +528,99 @@ class GalleryModal {
         this.closeBtn?.focus();
     }
 
-    setupLink(link, href, label) {
-        if (!link) return;
-        const value = typeof href === 'string' ? href.trim() : '';
-        const isValid = value && value !== '#';
-        if (isValid) {
-            link.href = value;
-            link.textContent = label;
-            link.removeAttribute('hidden');
-        } else {
-            link.setAttribute('hidden', '');
+    parseMediaDataset(mediaString = '[]', element, title) {
+        let parsed = [];
+        if (mediaString) {
+            try {
+                parsed = JSON.parse(mediaString);
+            } catch (error) {
+                console.warn('Unable to parse media dataset', error);
+            }
         }
+        if (!Array.isArray(parsed) || !parsed.length) {
+            const fallbackSrc = element.querySelector('img')?.getAttribute('src');
+            if (fallbackSrc) {
+                parsed = [{ type: 'image', src: fallbackSrc, alt: title }];
+            } else {
+                parsed = [];
+            }
+        }
+        return parsed;
+    }
+
+    renderGallery(gallery = []) {
+        this.currentGallery = Array.isArray(gallery) ? gallery : [];
+        this.activeIndex = 0;
+
+        if (this.mainContainer) {
+            this.mainContainer.innerHTML = '';
+        }
+        if (this.thumbsContainer) {
+            this.thumbsContainer.innerHTML = '';
+        }
+
+        if (!this.currentGallery.length) {
+            return;
+        }
+
+        this.setActiveMedia(0);
+        if (this.thumbsContainer) {
+            this.currentGallery.forEach((media, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'modal-thumb';
+                button.setAttribute('aria-label', media.alt || `Media ${index + 1}`);
+                if (index === this.activeIndex) {
+                    button.classList.add('is-active');
+                }
+                const preview = this.createMediaElement(media, true);
+                if (preview) {
+                    button.appendChild(preview);
+                }
+                button.addEventListener('click', () => this.setActiveMedia(index));
+                this.thumbsContainer.appendChild(button);
+            });
+
+            this.thumbsContainer.hidden = this.currentGallery.length <= 1;
+        }
+    }
+
+    setActiveMedia(index) {
+        if (!this.mainContainer || !this.currentGallery.length) return;
+        const boundedIndex = Math.max(0, Math.min(index, this.currentGallery.length - 1));
+        this.activeIndex = boundedIndex;
+        this.mainContainer.innerHTML = '';
+        const media = this.currentGallery[boundedIndex];
+        const node = this.createMediaElement(media, false);
+        if (node) {
+            this.mainContainer.appendChild(node);
+        }
+        if (this.thumbsContainer) {
+            Array.from(this.thumbsContainer.children).forEach((child, idx) => {
+                child.classList.toggle('is-active', idx === boundedIndex);
+            });
+        }
+    }
+
+    createMediaElement(media, isThumb = false) {
+        if (!media || !media.src) return null;
+        if (media.type === 'video') {
+            const video = document.createElement('video');
+            video.src = media.src;
+            video.controls = !isThumb;
+            video.loop = !isThumb;
+            video.muted = isThumb;
+            video.playsInline = true;
+            video.setAttribute('aria-label', media.alt || 'Video preview');
+            if (isThumb) {
+                video.removeAttribute('controls');
+            }
+            return video;
+        }
+        const img = document.createElement('img');
+        img.src = media.src;
+        img.alt = media.alt || 'Image preview';
+        return img;
     }
 
     hide() {
@@ -581,6 +655,70 @@ class GalleryModal {
     }
 }
 
+function setupChatbox() {
+    const chatBox = document.querySelector('[data-chatbot]');
+    const history = chatBox?.querySelector('[data-chat-history]');
+    const form = chatBox?.querySelector('[data-chat-form]');
+    const input = chatBox?.querySelector('[data-chat-input]');
+    if (!chatBox || !history || !form || !input) return;
+    if (form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    const scrollToBottom = () => {
+        history.scrollTop = history.scrollHeight;
+    };
+
+    const appendMessage = (role, text) => {
+        const message = document.createElement('div');
+        message.className = `chat-message chat-message--${role}`;
+        message.textContent = text;
+        history.appendChild(message);
+        scrollToBottom();
+        return message;
+    };
+
+    const showThinking = () => {
+        const thinking = document.createElement('div');
+        thinking.className = 'chat-thinking';
+        for (let index = 0; index < 3; index++) {
+            thinking.appendChild(document.createElement('span'));
+        }
+        history.appendChild(thinking);
+        scrollToBottom();
+        return thinking;
+    };
+
+    let pendingResponse = null;
+
+    const clearPending = () => {
+        if (!pendingResponse) return;
+        clearTimeout(pendingResponse.timer);
+        pendingResponse.element?.remove();
+        pendingResponse = null;
+    };
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const value = input.value.trim();
+        if (!value) return;
+
+        appendMessage('user', value);
+        input.value = '';
+        input.focus();
+
+        clearPending();
+        const thinkingElement = showThinking();
+        pendingResponse = {
+            element: thinkingElement,
+            timer: window.setTimeout(() => {
+                thinkingElement.remove();
+                appendMessage('bot', 'Cảm ơn bạn đã quan tâm. Mục này sẽ được phát triển trong tương lai');
+                pendingResponse = null;
+            }, 3000)
+        };
+    });
+}
+
 // =============================================
 // INITIALIZATION
 // =============================================
@@ -591,8 +729,20 @@ function initializeBook() {
     const openingAnimation = new OpeningAnimation();
     openingAnimation.start();
 
-    const galleryModal = new GalleryModal();
-    galleryModal.registerTriggers(['.portfolio-item', '.certificate-item']);
+    galleryModal = new GalleryModal();
+    const defaultGallerySelectors = ['.portfolio-item', '.certificate-item'];
+    const registerGallerySelectors = (selectors = defaultGallerySelectors) => {
+        if (!Array.isArray(selectors) || !selectors.length) {
+            selectors = defaultGallerySelectors;
+        }
+        galleryModal?.registerTriggers(selectors);
+    };
+    registerGallerySelectors();
+    document.addEventListener('portfolio-ready', (event) => {
+        registerGallerySelectors(event?.detail?.selectors);
+    });
+
+    setupChatbox();
 
     const contactForm = document.querySelector('.contact-box form');
     if (contactForm) {
