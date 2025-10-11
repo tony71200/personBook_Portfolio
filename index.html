@@ -27,17 +27,20 @@
       <!-- profile page -->
       <div class="book-page page-left">
         <div class="profile-page">
-          <img src="./assets/images/placeholders/no-image-3x4.svg" alt="" data-profile-avatar />
-          <h1 data-profile-name>Mr Tony</h1>
-          <div class="title-list" data-profile-titles>
-            <h3>Web Developer</h3>
-          </div>
-
-          <div class="social-media" data-social-media>
-            <a href="#"><i class="bx bxl-facebook"></i></a>
-            <a href="#"><i class="bx bxl-twitter"></i></a>
-            <a href="#"><i class="bx bxl-instagram"></i></a>
-            <a href="#"><i class="bx bxl-linkedin-square"></i></a>
+          <div class="avatar_name">
+            <img src="./assets/images/placeholders/no-image-3x4.svg" alt="" data-profile-avatar />
+            <div class="name_contact">
+              <h1 data-profile-name>Mr Tony</h1>
+              <div class="title-list" data-profile-titles>
+                <h3>Web Developer</h3>
+              </div>
+              <div class="social-media" data-social-media>
+                <a href="#"><i class="bx bxl-facebook"></i></a>
+                <a href="#"><i class="bx bxl-twitter"></i></a>
+                <a href="#"><i class="bx bxl-instagram"></i></a>
+                <a href="#"><i class="bx bxl-linkedin-square"></i></a>
+              </div>
+            </div>
           </div>
           <div class="paragraph" data-about>
             <p>
@@ -202,10 +205,10 @@
 
           <div class="portfolio-grid certificate-grid" data-certificate-grid></div>
 
-          <div class="publication-section">
+          <!-- <div class="publication-section">
             <h2 class="subtitle">Publications</h2>
             <div class="publication-list" data-publications></div>
-          </div>
+          </div> -->
 
           <span class="number-page">6</span>
           <span class="nextprev-btn back" data-page="turn-3">
@@ -216,14 +219,11 @@
 
       <!-- page 7 & 8 -->
       <div class="book-page page-right turn" id="turn-4">
-        <!-- page 7 (Contact Me!) -->
+        <!-- page 7 (publication) -->
         <div class="page-front">
-          <h1 class="title">Contact Me!</h1>
+          <h1 class="title">Publications!</h1>
 
-          <div class="contact-box" data-contact>
-            <ul class="contact-list"></ul>
-            <div class="contact-map" data-map=""></div>
-          </div>
+          <div class="publication-list" data-publications></div>
 
           <span class="number-page">7</span>
           <span class="nextprev-btn" data-page="turn-4">
@@ -232,12 +232,16 @@
 
         </div>
 
-        <!-- page 8 (back-profile)-->
+        <!-- page 8 (Contact Me!)-->
         <div class="page-back">
-          <h1 class="title">Thanks!</h1>
-          <p style="margin-top:1rem">Cảm ơn bạn đã xem qua portfolio của mình.</p>
-          <span class="nextprev-btn" data-page="turn-5"><i class="bx bx-chevron-right"></i></span><span
-            class="number-page">8</span>
+          <h1 class="title">Contact Me!</h1>
+
+          <div class="contact-box" data-contact>
+            <ul class="contact-list"></ul>
+            <div class="contact-map" data-map=""></div>
+          </div>
+
+          <span class="number-page">7</span>
           <span class="nextprev-btn back" data-page="turn-4">
             <i class="bx bx-chevron-left"></i>
           </span>
@@ -250,15 +254,15 @@
           <div class="chatbot-box" data-chatbot>
             <div class="chat-history" data-chat-history></div>
             <form class="chat-input-area" data-chat-form>
-              <input type="text" class="chat-input" data-chat-input placeholder="Nhập tin nhắn của bạn..." autocomplete="off"
-                aria-label="Tin nhắn Chatbot">
-              <button type="submit" class="btn chat-send">Gửi</button>
+              <input type="text" class="chat-input" data-chat-input placeholder="Nhập tin nhắn của bạn..."
+                autocomplete="off" aria-label="Tin nhắn Chatbot">
+              <button type="submit" class="btn chat-send"><i class="bx bxs-send"></i></button>
             </form>
           </div>
           <span class="number-page">9</span>
-          <span class="nextprev-btn back" data-page="turn-5">
+          <!-- <span class="nextprev-btn back" data-page="turn-5">
             <i class="bx bx-chevron-left"></i>
-          </span>
+          </span> -->
           <a href="#" class="back-profile">
             <p>Profile</p>
             <i class="bx bxs-user"></i>

@@ -72,6 +72,16 @@ class PageManager {
         return this.pages.find(page => page.id === id) || document.getElementById(id);
     }
 
+    getIndexOfPageContaining(selector) {
+        if (!selector) return -1;
+        return this.pages.findIndex(p => p.querySelector(selector));
+    }
+
+    countPagesUntil(selector) {
+        const idx = this.getIndexOfPageContaining(selector);
+        return idx; // -1 nếu không có, còn lại chính là số trang trước nó
+    }
+
     getTotalPages() {
         return this.totalPages;
     }
@@ -337,7 +347,10 @@ class ButtonHandler {
 
         const pages = pageManager.getAllPages();
 
-        for (let index = 0; index < pages.length; index++) {
+        // let len_id = pageManager.countPagesUntil(".contactbox");
+        // console.log("Page name: ", len_id);
+
+        for (let index = 0; index < pages.length - 1; index++) {
             await AnimationHelper.wait((index + 1) * CONFIG.PAGE_TURN_DELAY + 100);
             const page = pages[index];
             pageManager.turnPage(page);

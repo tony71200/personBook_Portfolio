@@ -270,6 +270,7 @@ const applyServices = (data) => {
         const card = createEl("article", "service-card");
         card.setAttribute("tabindex", "0");
         card.setAttribute("role", "group");
+        const icon_title = createEl("div", "icon_title")
 
         const iconWrap = createEl("div", "service-icon");
         const iconData = service.icon || {};
@@ -289,8 +290,8 @@ const applyServices = (data) => {
 
         const descEl = createEl("p", "service-desc");
         setHTML(descEl, sourceString(service.descriptionHtml));
-
-        card.append(iconWrap, titleEl, descEl);
+        icon_title.append(iconWrap, titleEl)
+        card.append(icon_title, descEl);
         container.appendChild(card);
     });
 };

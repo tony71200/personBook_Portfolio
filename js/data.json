@@ -113,23 +113,51 @@
       "items": [
         {
           "label": "PyTorch",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/pytorch.svg", "alt": "PyTorch" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/pytorch.svg",
+            "alt": "PyTorch"
+          }
         },
         {
           "label": "TensorFlow",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/tensorflow.svg", "alt": "TensorFlow" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/tensorflow.svg",
+            "alt": "TensorFlow"
+          }
         },
         {
           "label": "OpenCV",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/opencv.svg", "alt": "OpenCV" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/opencv.svg",
+            "alt": "OpenCV"
+          }
         },
         {
-          "label": "scikit-learn",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/scikitlearn.svg", "alt": "scikit-learn" }
+          "label": "ONNX",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/onnx.svg",
+            "alt": "ONNX"
+          }
         },
         {
-          "label": "LangChain",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/langchain.svg", "alt": "LangChain" }
+          "label": "Microsoft.ML",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/microsoft.svg",
+            "alt": ".NET"
+          }
+        },
+        {
+          "label": "Lang-chain",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/langchain.svg",
+            "alt": "langchain"
+          }
         }
       ]
     },
@@ -139,23 +167,41 @@
       "items": [
         {
           "label": "Python",
-          "icon": { "type": "class", "value": "bxl-python" }
+          "icon": {
+            "type": "class",
+            "value": "bxl-python"
+          }
         },
         {
           "label": "C++",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/cplusplus.svg", "alt": "C++" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/cplusplus.svg",
+            "alt": "C++"
+          }
         },
         {
           "label": "C#",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/csharp.svg", "alt": "C#" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/csharp.svg",
+            "alt": "C#"
+          }
         },
         {
           "label": "JavaScript",
-          "icon": { "type": "class", "value": "bxl-javascript" }
+          "icon": {
+            "type": "class",
+            "value": "bxl-javascript"
+          }
         },
         {
           "label": "SQL",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/mysql.svg", "alt": "SQL" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/mysql.svg",
+            "alt": "SQL"
+          }
         }
       ]
     },
@@ -165,49 +211,63 @@
       "items": [
         {
           "label": "FastAPI",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/fastapi.svg", "alt": "FastAPI" }
-        },
-        {
-          "label": "Node.js",
-          "icon": { "type": "class", "value": "bxl-nodejs" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/fastapi.svg",
+            "alt": "FastAPI"
+          }
         },
         {
           "label": "Docker",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/docker.svg", "alt": "Docker" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/docker.svg",
+            "alt": "Docker"
+          }
         },
         {
           "label": "Linux",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/linux.svg", "alt": "Linux" }
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/linux.svg",
+            "alt": "Linux"
+          }
         },
         {
           "label": "Git",
-          "icon": { "type": "class", "value": "bxl-git" }
+          "icon": {
+            "type": "class",
+            "value": "bxl-git"
+          }
         }
       ]
     },
     {
       "index": 4,
-      "category": "Visualisation & Front-end",
+      "category": "Machine Learning & Deep Learning Model",
       "items": [
         {
-          "label": "React",
-          "icon": { "type": "class", "value": "bxl-react" }
+          "label": "YOLO",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/yolo.svg"
+          }
         },
         {
-          "label": "Three.js",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/threedotjs.svg", "alt": "Three.js" }
+          "label": "Ollama",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/ollama.svg",
+            "alt": "Ollama"
+          }
         },
         {
-          "label": "Tailwind CSS",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/tailwindcss.svg", "alt": "Tailwind CSS" }
-        },
-        {
-          "label": "Plotly Dash",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/plotly.svg", "alt": "Plotly" }
-        },
-        {
-          "label": "Power BI",
-          "icon": { "type": "img", "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/powerbi.svg", "alt": "Power BI" }
+          "label": "Mistral",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/mistralai.svg",
+            "alt": "Mistral"
+          }
         }
       ]
     }
@@ -260,15 +320,6 @@
       "year": "2025",
       "summary": "Introduced iSegFormer + STCN workflow achieving mNoC 9.1 @ 85% IoU and 12.4 @ 90% IoU on the NCKUH dataset.",
       "link": "https://cvgip2025.tw/"
-    },
-    {
-      "index": 2,
-      "title": "Edge AI Pipelines for Industrial Machine Vision",
-      "authorsHtml": "<strong>Thanh-Long Nguyen</strong>, Phong-Phu Le, Jenn-Jier James Lien",
-      "venue": "International Journal of Automation and Smart Manufacturing",
-      "year": "2024",
-      "summary": "Described deployment patterns for YOLO and ONNX Runtime on Jetson-class hardware with automated data curation tooling.",
-      "link": "https://doi.org/10.1234/ijas.2024.105"
     }
   ],
   "portfolio": {
