@@ -91,6 +91,7 @@
           "src": "./assets/images/jjlien.png",
           "alt": "Prof. James Jenn-Jier Lien"
         },
+        "title": "Professor & Director, Robotics Lab (NCKU)",
         "quoteHtml": "<p>Robotics Lab, Dept.of CSIE, NCKU.</p>\n<p><a href='mailto:jjien@csie.ncku.edu.tw' target='_blank' rel='noopener' style='display: inline; color: var(--highlight_color);'>jjien@csie.ncku.edu.tw</a></p>\n<p>\"I had the pleasure of supervising Tony during his Master's at NCKU. He consistently demonstrated strong technical skills, a solid work ethic, and a collaborative spirit. His contributions to our research projects were valuable and impactful. I highly recommend Long for any role in AI or software development.\"</p>"
       },
       {
@@ -100,10 +101,177 @@
           "src": "./assets/images/lpphu.jpeg",
           "alt": "Le Phong Phu"
         },
+        "title": "Computer Vision Researcher, Robotics Lab NCKU",
         "quoteHtml": "<p>Robotics Lab, Dept.of CSIE, NCKU.</p>\n<p><a href='mailto:Phu210.vn@gmail.com' target='_blank' rel='noopener' style='display: inline; color: var(--highlight_color);'>Mr Phu</a></p>"
       }
     ]
   },
+  "skills": [
+    {
+      "index": 1,
+      "category": "Machine Learning & AI",
+      "items": [
+        {
+          "label": "PyTorch",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/pytorch.svg",
+            "alt": "PyTorch"
+          }
+        },
+        {
+          "label": "TensorFlow",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/tensorflow.svg",
+            "alt": "TensorFlow"
+          }
+        },
+        {
+          "label": "OpenCV",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/opencv.svg",
+            "alt": "OpenCV"
+          }
+        },
+        {
+          "label": "ONNX",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/onnx.svg",
+            "alt": "ONNX"
+          }
+        },
+        {
+          "label": "Microsoft.ML",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/microsoft.svg",
+            "alt": ".NET"
+          }
+        },
+        {
+          "label": "Lang-chain",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/langchain.svg",
+            "alt": "langchain"
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "category": "Programming Languages",
+      "items": [
+        {
+          "label": "Python",
+          "icon": {
+            "type": "class",
+            "value": "bxl-python"
+          }
+        },
+        {
+          "label": "C++",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/cplusplus.svg",
+            "alt": "C++"
+          }
+        },
+        {
+          "label": "C#",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/csharp.svg",
+            "alt": "C#"
+          }
+        },
+        {
+          "label": "JavaScript",
+          "icon": {
+            "type": "class",
+            "value": "bxl-javascript"
+          }
+        },
+        {
+          "label": "SQL",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/mysql.svg",
+            "alt": "SQL"
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "category": "Frameworks & Platforms",
+      "items": [
+        {
+          "label": "FastAPI",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/fastapi.svg",
+            "alt": "FastAPI"
+          }
+        },
+        {
+          "label": "Docker",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/docker.svg",
+            "alt": "Docker"
+          }
+        },
+        {
+          "label": "Linux",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/linux.svg",
+            "alt": "Linux"
+          }
+        },
+        {
+          "label": "Git",
+          "icon": {
+            "type": "class",
+            "value": "bxl-git"
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "category": "Machine Learning & Deep Learning Model",
+      "items": [
+        {
+          "label": "YOLO",
+          "icon": {
+            "type": "img",
+            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/yolo.svg"
+          }
+        },
+        {
+          "label": "Ollama",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/ollama.svg",
+            "alt": "Ollama"
+          }
+        },
+        {
+          "label": "Mistral",
+          "icon": {
+            "type": "img",
+            "src": "./assets/images/icon/mistralai.svg",
+            "alt": "Mistral"
+          }
+        }
+      ]
+    }
+  ],
   "resume": {
     "experiences": [
       {
@@ -145,17 +313,13 @@
   },
   "publications": [
     {
+      "index": 1,
+      "title": "3D Interactive Segmentation for Lung Nodule Labeling",
+      "authorsHtml": "Phong-Phu Le, <strong>Thanh-Long Nguyen</strong>, Chao-Chung Chang, Chia-Ying Lin, Yi-Ting Yen, Yaun Lin Tseng, Ching-Ting Tu, Jenn-Jier James Lien",
+      "venue": "CVGIP 2025",
       "year": "2025",
-      "items": [
-        {
-          "index": 1,
-          "title": "3D Interactive Segmentation for Lung Nodule Labeling",
-          "link": "#",
-          "authorsHtml": "Phong-Phu Le, <strong>Thanh-Long Nguyen</strong>, Chao-Chung Chang, Chia-Ying Lin, Yi-Ting Yen, Yaun Lin Tseng, Ching-Ting Tu, Jenn-Jier James Lien",
-          "venue": "CVGIP 2025 — August 2025",
-          "summary": "Method: iSegFormer + STCN; mNoC 9.1 @ 85% IoU, 12.4 @ 90% IoU on NCKUH dataset."
-        }
-      ]
+      "summary": "Introduced iSegFormer + STCN workflow achieving mNoC 9.1 @ 85% IoU and 12.4 @ 90% IoU on the NCKUH dataset.",
+      "link": "https://cvgip2025.tw/"
     }
   ],
   "portfolio": {
@@ -169,6 +333,7 @@
           "alt": "Wafer Defect Detection"
         },
         "descriptionHtml": "<p>Developed visual inspection pipelines for wafer manufacturing lines, including dataset curation and deep learning inference on edge devices.</p>",
+        "techStack": "PyTorch, HALCON, NVIDIA Jetson",
         "media": []
       },
       {
@@ -180,6 +345,7 @@
           "alt": "C# ONNX Runtime Inference Pipeline"
         },
         "descriptionHtml": "<p>Optimized ONNX Runtime integration in C# for real-time defect detection and model lifecycle automation.</p>",
+        "techStack": "C#, ONNX Runtime, PLC Integration",
         "media": [
           {
             "type": "video",
@@ -202,6 +368,7 @@
           "alt": "Multilingual Docs Chatbot (LangChain)"
         },
         "descriptionHtml": "<p>Retrieval-augmented QA system leveraging LangChain for multilingual corporate documents.</p>",
+        "techStack": "LangChain, OpenAI, Pinecone",
         "media": [
           {
             "type": "image",
@@ -224,6 +391,7 @@
           "alt": "Lung Tumor Detection & 3D Reconstruction"
         },
         "descriptionHtml": "<p>Deep-learning-assisted tumor detection, segmentation, and 3D reconstruction for surgical planning.</p>",
+        "techStack": "3D Slicer, PyTorch, Medical Imaging Toolkits",
         "media": [
           {
             "type": "image",
@@ -252,6 +420,7 @@
         },
         "link": "https://www.instagram.com/p/C0ZKdhdJcqmDK1S-SfBaZJtq2EQvOQGELWf85A0/",
         "descriptionHtml": "<p>Interactive AR experience showcasing marker-based tracking and dynamic content placement.</p>",
+        "techStack": "Unity, AR Foundation",
         "media": []
       },
       {
@@ -264,6 +433,7 @@
         },
         "link": "https://www.instagram.com/p/CXXlTqGFn3SOCjnTmLrrtJJCrIk0yTY0uka3Sw0/",
         "descriptionHtml": "<p>Advanced AR prototype with animated overlays and real-world occlusion handling.</p>",
+        "techStack": "Unity, ARKit",
         "media": []
       },
       {
@@ -275,6 +445,7 @@
           "alt": "Omniverse"
         },
         "descriptionHtml": "<p>Create the Visualize Board in Omniverse and Error. Make the dataset</p>",
+        "techStack": "NVIDIA Omniverse, USD Pipelines",
         "media": []
       },
       {
@@ -286,6 +457,7 @@
           "alt": "Label Training Application"
         },
         "descriptionHtml": "<p>Create the application for the workers can label and training AI Model in Jetson.</p>",
+        "techStack": "PyQt, PyTorch, NVIDIA Jetson",
         "media": [
           {
             "type": "image",
@@ -303,6 +475,7 @@
           "alt": "Stopper Detection"
         },
         "descriptionHtml": "<p>YOLO detection for stopper inspection with a C# ONNX Runtime pipeline.</p>",
+        "techStack": "YOLOv5, ONNX Runtime, C#",
         "media": [
           {
             "type": "image",
@@ -319,6 +492,7 @@
         "index": 1,
         "title": "C++ For C Programmers",
         "from": "SoloLearn",
+        "year": "2020",
         "descriptionHtml": "<p>Coverage of modern C++ constructs such as STL containers, iterators, and graph algorithms tailored for students with a C background.</p>",
         "image": {
           "src": "./assets/images/certificate_Cpp.jpg",
@@ -329,6 +503,7 @@
         "index": 2,
         "title": "Machine Learning with Python",
         "from": "Coursera - IBM",
+        "year": "2021",
         "descriptionHtml": "<p>Hands-on labs with scikit-learn covering supervised and unsupervised learning, model evaluation, and deployment basics.</p>",
         "image": {
           "src": "./assets/images/placeholders/no-image-3x4.svg",

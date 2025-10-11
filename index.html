@@ -27,17 +27,20 @@
       <!-- profile page -->
       <div class="book-page page-left">
         <div class="profile-page">
-          <img src="./assets/images/placeholders/no-image-3x4.svg" alt="" data-profile-avatar />
-          <h1 data-profile-name>Mr Tony</h1>
-          <div class="title-list" data-profile-titles>
-            <h3>Web Developer</h3>
-          </div>
-
-          <div class="social-media" data-social-media>
-            <a href="#"><i class="bx bxl-facebook"></i></a>
-            <a href="#"><i class="bx bxl-twitter"></i></a>
-            <a href="#"><i class="bx bxl-instagram"></i></a>
-            <a href="#"><i class="bx bxl-linkedin-square"></i></a>
+          <div class="avatar_name">
+            <img src="./assets/images/placeholders/no-image-3x4.svg" alt="" data-profile-avatar />
+            <div class="name_contact">
+              <h1 data-profile-name>Mr Tony</h1>
+              <div class="title-list" data-profile-titles>
+                <h3>Web Developer</h3>
+              </div>
+              <div class="social-media" data-social-media>
+                <a href="#"><i class="bx bxl-facebook"></i></a>
+                <a href="#"><i class="bx bxl-twitter"></i></a>
+                <a href="#"><i class="bx bxl-instagram"></i></a>
+                <a href="#"><i class="bx bxl-linkedin-square"></i></a>
+              </div>
+            </div>
           </div>
           <div class="paragraph" data-about>
             <p>
@@ -135,6 +138,11 @@
               </p>
             </div>
           </div>
+          <div class="edu-testimonials" data-edu-testimonials="">
+            <h2 class="title" style="margin-top:1rem">Testimonials</h2>
+            <ul class="testimonials-list"></ul>
+          </div>
+
 
           <span class="number-page">2</span>
 
@@ -152,47 +160,7 @@
         <div class="page-front">
           <h1 class="title">My Services</h1>
 
-          <div class="services-box">
-            <div class="services-content">
-              <i class="bx bx-code-alt"></i>
-              <h3>Web Development</h3>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
-                quae accusamus aliquam.
-              </p>
-              <a href="#" class="btn">Read More</a>
-            </div>
-
-            <div class="services-content">
-              <i class="bx bxs-paint"></i>
-              <h3>Creative Design</h3>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
-                quae accusamus aliquam.
-              </p>
-              <a href="#" class="btn">Read More</a>
-            </div>
-
-            <div class="services-content">
-              <i class="bx bx-bar-chart-alt"></i>
-              <h3>Digital Marketing</h3>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
-                quae accusamus aliquam.
-              </p>
-              <a href="#" class="btn">Read More</a>
-            </div>
-
-            <div class="services-content">
-              <i class="bx bx-search"></i>
-              <h3>SEO</h3>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi
-                quae accusamus aliquam.
-              </p>
-              <a href="#" class="btn">Read More</a>
-            </div>
-          </div>
+          <div class="services-box" data-services></div>
 
           <span class="number-page">3</span>
 
@@ -206,37 +174,7 @@
         <div class="page-back">
           <h1 class="title">My Skills</h1>
 
-          <div class="skills-box">
-            <div class="skills-content">
-              <h3>Front-End</h3>
-              <div class="content">
-                <span><i class="bx bxl-html5"></i> HTML</span>
-                <span><i class="bx bxl-css3"></i>CSS</span>
-                <span><i class="bx bxl-javascript"></i>JS</span>
-                <span><i class="bx bxl-angular"></i>Angular</span>
-                <span><i class="bx bxl-react"></i>React Js</span>
-                <span><i class="bx bxl-bootstrap"></i>BootStrap</span>
-                <span><i class="bx bxl-jquery"></i>Jquery</span>
-              </div>
-            </div>
-
-            <div class="skills-content">
-              <h3>Back-End</h3>
-              <div class="content">
-                <span><i class="bx bxl-python"></i>Python</span>
-                <span><i class="bx bxl-java"></i>Java</span>
-                <span><i class="bx bxl-nodejs"></i>Node JS</span>
-                <span><i class="bx bxl-php"></i>PHP</span>
-              </div>
-            </div>
-
-            <div class="skills-content">
-              <h3>UI/UX Design</h3>
-              <div class="content">
-                <span><i class="bx bxl-figma"></i>Figma</span>
-              </div>
-            </div>
-          </div>
+          <div class="skills-box" data-skills></div>
 
           <span class="number-page">4</span>
 
@@ -253,24 +191,7 @@
         <div class="page-front">
           <h1 class="title">Portfolio</h1>
 
-          <div class="portfolio-grid">
-            <!-- ví dụ items; sửa src/link theo data thật -->
-            <div class="portfolio-item" tabindex="0" role="button"
-              data-title="Project A" data-tech="HTML, CSS, JS" data-live="#" data-code="#"
-              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project A.">
-              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project A">
-              <div class="caption">Project A</div>
-            </div>
-
-            <div class="portfolio-item" tabindex="0" role="button"
-              data-title="Project B" data-tech="React, Node" data-live="#" data-code="#"
-              data-img="assets/images/placeholders/no-image-3x4.svg" data-desc="Mô tả ngắn gọn cho Project B.">
-              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Project B">
-              <div class="caption">Project B</div>
-            </div>
-
-            <!-- thêm item theo nhu cầu -->
-          </div>
+          <div class="portfolio-grid" data-portfolio-grid></div>
 
           <span class="number-page">5</span>
           <span class="nextprev-btn" data-page="turn-3">
@@ -282,29 +203,12 @@
         <div class="page-back">
           <h1 class="title">Certificates</h1>
 
-          <div class="portfolio-grid certificate-grid">
-            <div class="portfolio-item certificate-item" tabindex="0" role="button"
-              data-title="Certificate Name A" data-meta-label="Issuer" data-meta="Coursera"
-              data-live="" data-code="" data-img="assets/images/placeholders/no-image-3x4.svg"
-              data-desc="Mô tả ngắn về chứng chỉ A (đơn vị cấp, nội dung chính, ID…).">
-              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Certificate Name A">
-              <div class="caption">
-                <span class="caption-title">Certificate Name A</span>
-                <span class="caption-sub">2023</span>
-              </div>
-            </div>
+          <div class="portfolio-grid certificate-grid" data-certificate-grid></div>
 
-            <div class="portfolio-item certificate-item" tabindex="0" role="button"
-              data-title="Certificate Name B" data-meta-label="Issuer" data-meta="Udemy"
-              data-live="" data-code="" data-img="assets/images/placeholders/no-image-3x4.svg"
-              data-desc="Mô tả ngắn về chứng chỉ B.">
-              <img src="assets/images/placeholders/no-image-3x4.svg" alt="Certificate Name B">
-              <div class="caption">
-                <span class="caption-title">Certificate Name B</span>
-                <span class="caption-sub">2024</span>
-              </div>
-            </div>
-          </div>
+          <!-- <div class="publication-section">
+            <h2 class="subtitle">Publications</h2>
+            <div class="publication-list" data-publications></div>
+          </div> -->
 
           <span class="number-page">6</span>
           <span class="nextprev-btn back" data-page="turn-3">
@@ -315,44 +219,56 @@
 
       <!-- page 7 & 8 -->
       <div class="book-page page-right turn" id="turn-4">
-        <!-- page 7 (Contact Me!) -->
+        <!-- page 7 (publication) -->
         <div class="page-front">
-          <h1 class="title">Contact Me!</h1>
+          <h1 class="title">Publications!</h1>
 
-          <div class="contact-box">
-            <form action="">
-              <input type="text" class="field" placeholder="Full Name" required>
-              <input type="email" class="field" placeholder="Email Address" required>
-              <textarea cols="30" rows="10" class="field" placeholder="Your Message"></textarea>
-              <input type="submit" value="Send Message" class="btn">
-            </form>
-          </div>
+          <div class="publication-list" data-publications></div>
 
           <span class="number-page">7</span>
           <span class="nextprev-btn" data-page="turn-4">
             <i class="bx bx-chevron-right"></i>
           </span>
+
+        </div>
+
+        <!-- page 8 (Contact Me!)-->
+        <div class="page-back">
+          <h1 class="title">Contact Me!</h1>
+
+          <div class="contact-box" data-contact>
+            <ul class="contact-list"></ul>
+            <div class="contact-map" data-map=""></div>
+          </div>
+
+          <span class="number-page">7</span>
+          <span class="nextprev-btn back" data-page="turn-4">
+            <i class="bx bx-chevron-left"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="book-page page-right"> <!--turn" id="turn-5">-->
+        <div class="page-front">
+          <h1 class="title">Chatbot</h1>
+          <div class="chatbot-box" data-chatbot>
+            <div class="chat-history" data-chat-history></div>
+            <form class="chat-input-area" data-chat-form>
+              <input type="text" class="chat-input" data-chat-input placeholder="Nhập tin nhắn của bạn..."
+                autocomplete="off" aria-label="Tin nhắn Chatbot">
+              <button type="submit" class="btn chat-send"><i class="bx bxs-send"></i></button>
+            </form>
+          </div>
+          <span class="number-page">9</span>
+          <!-- <span class="nextprev-btn back" data-page="turn-5">
+            <i class="bx bx-chevron-left"></i>
+          </span> -->
           <a href="#" class="back-profile">
             <p>Profile</p>
             <i class="bx bxs-user"></i>
           </a>
         </div>
-
-        <!-- page 8 (back-profile)
-        <div class="page-back">
-          <h1 class="title">Thanks!</h1>
-          <p style="margin-top:1rem">Cảm ơn bạn đã xem qua portfolio của mình.</p>
-
-          <span class="number-page">8</span>
-          <span class="nextprev-btn back" data-page="turn-4">
-            <i class="bx bx-chevron-left"></i>
-          </span>
-
-          <a href="#" class="back-profile">
-            <p>Profile</p>
-            <i class="bx bxs-user"></i>
-          </a>
-        </div> -->
+        <div class="page-back"></div>
       </div>
 
       <!-- Modal (dán cuối .book, trước </div> book) -->
@@ -363,17 +279,16 @@
             <button class="modal-close" title="Close">✕</button>
           </div>
           <div class="modal-body">
-            <img class="modal-image" src="" alt="Preview">
+            <div class="modal-gallery">
+              <div class="modal-media-main" data-modal-main></div>
+              <div class="modal-thumbnails" data-modal-thumbs></div>
+            </div>
             <div class="modal-meta">
               <p class="modal-meta-line" style="margin-top:.6rem;">
-                <strong class="modal-meta-label">Tech:</strong>
+                <strong class="modal-meta-label">Details:</strong>
                 <span class="modal-meta-value"></span>
               </p>
-              <p class="modal-desc" style="margin-top:.25rem;"></p>
-            </div>
-            <div class="modal-actions" style="margin-top:.6rem;">
-              <a class="btn modal-live" href="#" target="_blank" rel="noreferrer">Live Preview</a>
-              <a class="btn modal-code" href="#" target="_blank" rel="noreferrer">Source Code</a>
+              <div class="modal-desc" style="margin-top:.25rem;"></div>
             </div>
           </div>
         </div>
