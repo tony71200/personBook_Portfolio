@@ -194,14 +194,6 @@
             "type": "class",
             "value": "bxl-javascript"
           }
-        },
-        {
-          "label": "SQL",
-          "icon": {
-            "type": "img",
-            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/mysql.svg",
-            "alt": "SQL"
-          }
         }
       ]
     },
@@ -209,22 +201,6 @@
       "index": 3,
       "category": "Frameworks & Platforms",
       "items": [
-        {
-          "label": "FastAPI",
-          "icon": {
-            "type": "img",
-            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/fastapi.svg",
-            "alt": "FastAPI"
-          }
-        },
-        {
-          "label": "Docker",
-          "icon": {
-            "type": "img",
-            "src": "https://cdn.jsdelivr.net/npm/simple-icons@9.17.0/icons/docker.svg",
-            "alt": "Docker"
-          }
-        },
         {
           "label": "Linux",
           "icon": {
