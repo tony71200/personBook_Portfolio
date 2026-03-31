@@ -1,0 +1,27 @@
+[
+  {
+    "id": "tech_halcon",
+    "category": "technical",
+    "content": "Có kinh nghiệm với HALCON 25.05 cho thị giác máy. Lưu ý tuple_string trong phiên bản này cần 3 tham số đầu vào. Em đã áp dụng overpaint_gray và phase_correlation cho bài toán inspection công nghiệp."
+  },
+  {
+    "id": "tech_opencv_csharp",
+    "category": "technical",
+    "content": "Em phát triển ứng dụng Computer Vision bằng C# kết hợp OpenCV để tiền xử lý ảnh, phát hiện lỗi bề mặt và trực quan hóa kết quả theo thời gian thực."
+  },
+  {
+    "id": "project_deployment",
+    "category": "technical",
+    "content": "Quy trình triển khai dự án của em gồm phân tích yêu cầu, thử nghiệm offline với tập ảnh chuẩn, sau đó hiệu chỉnh ngưỡng và tích hợp vào dây chuyền. Em ưu tiên độ ổn định và khả năng bảo trì."
+  },
+  {
+    "id": "personal_ncku",
+    "category": "personal",
+    "content": "Em từng tham gia tích cực tại hội sinh viên Việt Nam ở NCKU, hỗ trợ tổ chức sự kiện cộng đồng và truyền thông thương hiệu cho các hoạt động sinh viên."
+  },
+  {
+    "id": "personal_fitness",
+    "category": "personal",
+    "content": "Em duy trì kỷ luật tập luyện thể thao với lịch 5 buổi mỗi tuần theo mô hình hybrid gym/home để giữ sức khỏe và hiệu suất làm việc ổn định."
+  }
+]
