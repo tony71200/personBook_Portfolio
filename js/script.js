@@ -673,20 +673,107 @@ function setupChatbox() {
     const history = chatBox?.querySelector('[data-chat-history]');
     const form = chatBox?.querySelector('[data-chat-form]');
     const input = chatBox?.querySelector('[data-chat-input]');
-    if (!chatBox || !history || !form || !input) return;
+    const quotaDisplay = chatBox?.querySelector('[data-chat-quota]');
+    const statusDot = document.querySelector('[data-api-status-dot]');
+    if (!chatBox || !history || !form || !input || !quotaDisplay || !statusDot) return;
     if (form.dataset.bound === 'true') return;
     form.dataset.bound = 'true';
+
+    const QUOTA_KEY = 'gemini_quota';
+    const SESSION_KEY = 'chat_session_history';
+    const RPM_LIMIT = 15;
+    const CHAT_PROXY_ENDPOINT = '/api/chat';
+    const DATABASE_URL = './data/database.json';
+    const SYSTEM_INSTRUCTION = `Bạn là Virtual Assistant cho portfolio ứng viên.
+
+PERSONA:
+- Luôn xưng là "Em" khi trả lời bằng tiếng Việt.
+- Giọng điệu chuyên nghiệp, lịch sự, nhiệt tình.
+
+KNOWLEDGE BOUNDARY:
+- Chỉ dùng thông tin từ Context đã truy xuất.
+- Nếu thiếu dữ liệu, trả lời: "Dạ, hiện tại em chưa có thông tin chi tiết về phần này trong hồ sơ. Anh/Chị có muốn biết thêm về các dự án Computer Vision của em không?"
+- Không trả lời các chủ đề chính trị, tôn giáo hoặc kiến thức ngoài hồ sơ.`;
+    const FALLBACK_MESSAGE = 'Dạ, hiện tại em chưa có thông tin chi tiết về phần này trong hồ sơ. Anh/Chị có muốn biết thêm về các dự án Computer Vision của em không?';
+
+    let requestLogs = [];
+    let knowledgeBase = [];
+    let embeddingAvailable = true;
+    let chatAvailable = true;
+
+    const setApiStatus = (isOnline) => {
+        statusDot.classList.toggle('api-status-dot--online', Boolean(isOnline));
+        statusDot.classList.toggle('api-status-dot--offline', !isOnline);
+        statusDot.setAttribute('title', isOnline ? 'API connected' : 'API disconnected');
+    };
+
+    const probeApiStatus = async () => {
+        try {
+            const response = await fetch(CHAT_PROXY_ENDPOINT, { method: 'OPTIONS' });
+            const ok = response.status === 204 || response.status === 200;
+            setApiStatus(ok);
+            if (!ok) {
+                embeddingAvailable = false;
+                chatAvailable = false;
+            }
+        } catch {
+            setApiStatus(false);
+            embeddingAvailable = false;
+            chatAvailable = false;
+        }
+    };
+
+    const cosineSimilarity = (A = [], B = []) => {
+        if (!Array.isArray(A) || !Array.isArray(B) || A.length === 0 || A.length !== B.length) return 0;
+        const dot = A.reduce((sum, a, i) => sum + a * B[i], 0);
+        const magA = Math.sqrt(A.reduce((sum, a) => sum + a * a, 0));
+        const magB = Math.sqrt(B.reduce((sum, b) => sum + b * b, 0));
+        if (!magA || !magB) return 0;
+        return dot / (magA * magB);
+    };
 
     const scrollToBottom = () => {
         history.scrollTop = history.scrollHeight;
     };
 
-    const appendMessage = (role, text) => {
+    const loadRequestLogs = () => {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(QUOTA_KEY) || '[]');
+            requestLogs = Array.isArray(parsed) ? parsed : [];
+        } catch {
+            requestLogs = [];
+        }
+    };
+
+    const persistRequestLogs = () => {
+        localStorage.setItem(QUOTA_KEY, JSON.stringify(requestLogs));
+    };
+
+    const updateQuotaDisplay = () => {
+        const now = Date.now();
+        requestLogs = requestLogs.filter(time => now - time < 60000);
+        const remaining = Math.max(0, RPM_LIMIT - requestLogs.length);
+        quotaDisplay.textContent = `Queries remaining: ${remaining}/${RPM_LIMIT} (RPM)`;
+        persistRequestLogs();
+        return remaining;
+    };
+
+    const consumeQuota = () => {
+        requestLogs.push(Date.now());
+        updateQuotaDisplay();
+    };
+
+    const checkQuota = () => updateQuotaDisplay() > 0;
+
+    const appendMessage = (role, text, shouldPersist = true) => {
         const message = document.createElement('div');
         message.className = `chat-message chat-message--${role}`;
         message.textContent = text;
         history.appendChild(message);
         scrollToBottom();
+        if (shouldPersist) {
+            persistSession();
+        }
         return message;
     };
 
@@ -701,35 +788,201 @@ function setupChatbox() {
         return thinking;
     };
 
-    let pendingResponse = null;
+    const typeText = (role, text) => new Promise((resolve) => {
+        const message = document.createElement('div');
+        message.className = `chat-message chat-message--${role}`;
+        history.appendChild(message);
+        const chars = Array.from(text || '');
+        let idx = 0;
+        const timer = window.setInterval(() => {
+            idx += 1;
+            message.textContent = chars.slice(0, idx).join('');
+            scrollToBottom();
+            if (idx >= chars.length) {
+                clearInterval(timer);
+                persistSession();
+                resolve(message);
+            }
+        }, 10);
+    });
 
-    const clearPending = () => {
-        if (!pendingResponse) return;
-        clearTimeout(pendingResponse.timer);
-        pendingResponse.element?.remove();
-        pendingResponse = null;
+    const persistSession = () => {
+        const records = Array.from(history.querySelectorAll('.chat-message')).map((item) => ({
+            role: item.classList.contains('chat-message--user') ? 'user' : 'bot',
+            text: item.textContent || ''
+        }));
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(records));
     };
 
-    form.addEventListener('submit', (event) => {
+    const restoreSession = () => {
+        try {
+            const records = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '[]');
+            if (Array.isArray(records) && records.length) {
+                records.forEach((item) => appendMessage(item.role === 'user' ? 'user' : 'bot', item.text, false));
+                return;
+            }
+        } catch {
+            // ignore malformed session data
+        }
+        appendMessage('bot', 'Xin chào Anh/Chị, em có thể hỗ trợ giới thiệu nhanh về kỹ năng và dự án của em.', false);
+        persistSession();
+    };
+
+    const loadDatabase = async () => {
+        const isFileProtocol = window.location.protocol === 'file:';
+        if (isFileProtocol && Array.isArray(window.__CHATBOT_DATABASE__)) {
+            knowledgeBase = window.__CHATBOT_DATABASE__;
+            console.info('Loaded chatbot database from inline fallback (file:// mode).');
+            return;
+        }
+
+        try {
+            const response = await fetch(DATABASE_URL, { cache: 'no-cache' });
+            if (!response.ok) throw new Error(`Không tải được database: ${response.status}`);
+            const payload = await response.json();
+            knowledgeBase = Array.isArray(payload) ? payload : [];
+        } catch (error) {
+            console.error('Load database.json thất bại', error);
+            if (isFileProtocol) {
+                console.error('Tip: file:// chặn fetch JSON. Hãy mở qua HTTP hoặc nạp ./data/database.local.js trước js/script.js.');
+            }
+            knowledgeBase = [];
+        }
+    };
+
+    const keywordSearch = (query, topK = 3) => {
+        const terms = (query || '').toLowerCase().split(/\s+/).filter(Boolean);
+        if (!terms.length) return [];
+
+        return knowledgeBase
+            .map(item => {
+                const text = `${item.id} ${item.category} ${item.content}`.toLowerCase();
+                const matches = terms.reduce((sum, term) => sum + (text.includes(term) ? 1 : 0), 0);
+                const score = matches / terms.length;
+                return { ...item, score };
+            })
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, topK);
+    };
+
+    const getEmbedding = async (text) => {
+        const response = await fetch(CHAT_PROXY_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mode: 'embed', text })
+        });
+        if (!response.ok) {
+            if (response.status === 404 || response.status === 405 || response.status === 501) {
+                embeddingAvailable = false;
+                setApiStatus(false);
+            }
+            throw new Error(`Embedding API lỗi: ${response.status}`);
+        }
+        setApiStatus(true);
+        const payload = await response.json();
+        return Array.isArray(payload?.embedding) ? payload.embedding : [];
+    };
+
+    const semanticSearch = async (query, topK = 3) => {
+        if (!knowledgeBase.length) return [];
+
+        if (!embeddingAvailable) {
+            return keywordSearch(query, topK);
+        }
+
+        try {
+            const queryVector = await getEmbedding(query);
+            if (!queryVector.length) return keywordSearch(query, topK);
+
+            const vectorResults = knowledgeBase
+                .filter(item => Array.isArray(item.vector) && item.vector.length === queryVector.length)
+                .map(item => ({ ...item, score: cosineSimilarity(queryVector, item.vector) }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, topK)
+                .filter(item => item.score > 0.3);
+
+            return vectorResults.length ? vectorResults : keywordSearch(query, topK);
+        } catch (error) {
+            if (String(error?.message || '').includes('Embedding API lỗi')) {
+                return keywordSearch(query, topK);
+            }
+            throw error;
+        }
+    };
+
+    const askChatbot = async (question, contexts) => {
+        if (!chatAvailable) {
+            return contexts.length ? contexts[0].content : FALLBACK_MESSAGE;
+        }
+
+        const response = await fetch(CHAT_PROXY_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                mode: 'chat',
+                message: question,
+                systemInstruction: SYSTEM_INSTRUCTION,
+                context: contexts.map(item => `[${item.id}] ${item.content}`).join('\n')
+            })
+        });
+        if (!response.ok) {
+            if (response.status === 404 || response.status === 405 || response.status === 501) {
+                chatAvailable = false;
+                setApiStatus(false);
+                return contexts.length ? contexts[0].content : FALLBACK_MESSAGE;
+            }
+            throw new Error(`Chat API lỗi: ${response.status}`);
+        }
+        setApiStatus(true);
+        const payload = await response.json();
+        return (payload?.text || '').trim();
+    };
+
+    let busy = false;
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const value = input.value.trim();
-        if (!value) return;
+        if (!value || busy) return;
 
-        appendMessage('user', value);
+        if (!checkQuota()) {
+            appendMessage('bot', 'Dạ, hiện em đã chạm giới hạn 15 request/phút. Anh/Chị chờ giúp em khoảng 1 phút nhé.');
+            return;
+        }
+
+        busy = true;
         input.value = '';
-        input.focus();
+        appendMessage('user', value);
+        consumeQuota();
 
-        clearPending();
         const thinkingElement = showThinking();
-        pendingResponse = {
-            element: thinkingElement,
-            timer: window.setTimeout(() => {
+        try {
+            const contexts = await semanticSearch(value, 3);
+            if (!contexts.length) {
                 thinkingElement.remove();
-                appendMessage('bot', 'Cảm ơn bạn đã quan tâm. Mục này sẽ được phát triển trong tương lai');
-                pendingResponse = null;
-            }, 3000)
-        };
+                await typeText('bot', FALLBACK_MESSAGE);
+            } else {
+                const answer = await askChatbot(value, contexts);
+                thinkingElement.remove();
+                await typeText('bot', answer || FALLBACK_MESSAGE);
+            }
+        } catch (error) {
+            if (!String(error?.message || '').includes('Embedding API lỗi: 405')) {
+                console.error('Chatbot error', error);
+            }
+            thinkingElement.remove();
+            await typeText('bot', 'Dạ, hiện tại hệ thống đang bận. Anh/Chị thử lại sau ít phút giúp em nhé.');
+        } finally {
+            busy = false;
+            input.focus();
+        }
     });
+
+    loadRequestLogs();
+    updateQuotaDisplay();
+    restoreSession();
+    loadDatabase();
+    probeApiStatus();
 }
 
 // =============================================

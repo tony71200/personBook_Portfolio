@@ -30,69 +30,38 @@ const ensureTemp = (selector) => {
     return tempCache.get(selector);
 };
 
+const getInlinePortfolioData = () => {
+    const inlinePayload = window.__PORTFOLIO_DATA__;
+    return inlinePayload && typeof inlinePayload === "object" ? inlinePayload : null;
+};
+
 const loadData = async () => {
+    const isFileProtocol = window.location.protocol === "file:";
+    if (isFileProtocol) {
+        const inlinePayload = getInlinePortfolioData();
+        if (inlinePayload) {
+            applyAll(inlinePayload);
+            console.info("Loaded portfolio data from inline fallback (file:// mode).");
+            return;
+        }
+    }
+
     try {
         const payload = await fetchJson(DATA_URL);
         applyAll(payload);
         return;
     } catch (primaryError) {
-        if (window.location.protocol === "file:" && document.body) {
-            try {
-                console.warn(`fetch(${DATA_URL}) failed under file://; attempting iframe fallback.`, primaryError);
-                const payload = await loadJsonViaIframe(DATA_URL);
-                applyAll(payload);
-                return;
-            } catch (fallbackError) {
-                console.error("Iframe fallback for data.json failed", fallbackError);
-            }
-        }
         console.error("Unable to load site data", primaryError);
-        if (window.location.protocol === "file:") {
-            console.error("Tip: Browsers often block fetch() on file URLs. Please run a local HTTP server (e.g. `python -m http.server`) or host the site via HTTP/S.")
+        if (isFileProtocol) {
+            console.error('Tip: Browsers block fetch() for file://. Use a local HTTP server (e.g. `python -m http.server`) or load `js/data.local.js` before `js/update.js`.');
         }
     }
 };
 
-const loadJsonViaIframe = (url) => new Promise((resolve, reject) => {
-    if (!document.body) {
-        reject(new Error("Document body is not available for iframe fallback."));
-        return;
-    }
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.setAttribute("aria-hidden", "true");
-    const cleanup = () => {
-        if (iframe.parentNode) {
-            iframe.parentNode.removeChild(iframe);
-        }
-    };
-    iframe.addEventListener("load", () => {
-        try {
-            const doc = iframe.contentDocument || iframe.contentWindow?.document;
-            if (!doc) throw new Error("Missing iframe document");
-            const text = doc.body ? doc.body.textContent : "";
-            if (!text) throw new Error("Empty response body");
-            const parsed = JSON.parse(text)
-            cleanup();
-            resolve(parsed);
-        } catch (err) {
-            cleanup();
-            reject(err);
-        }
-    });
-
-    iframe.addEventListener("error", () => {
-        cleanup()
-        reject(new Error(`Failed to laod ${url} via iframe`));
-    });
-    iframe.src = url;
-    document.body.appendChild(iframe);
-});
-
 const fetchJson = async (url) => {
     const response = await fetch(url, { cache: "no-cache" });
     if (!response.ok) {
-        throw new Error("Document body is not available for iframe fallback.")
+        throw new Error(`Request failed: ${response.status}`)
     }
     return response.json();
 }
