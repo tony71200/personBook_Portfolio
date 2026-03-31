@@ -674,7 +674,8 @@ function setupChatbox() {
     const form = chatBox?.querySelector('[data-chat-form]');
     const input = chatBox?.querySelector('[data-chat-input]');
     const quotaDisplay = chatBox?.querySelector('[data-chat-quota]');
-    if (!chatBox || !history || !form || !input || !quotaDisplay) return;
+    const statusDot = document.querySelector('[data-api-status-dot]');
+    if (!chatBox || !history || !form || !input || !quotaDisplay || !statusDot) return;
     if (form.dataset.bound === 'true') return;
     form.dataset.bound = 'true';
 
@@ -699,6 +700,28 @@ KNOWLEDGE BOUNDARY:
     let knowledgeBase = [];
     let embeddingAvailable = true;
     let chatAvailable = true;
+
+    const setApiStatus = (isOnline) => {
+        statusDot.classList.toggle('api-status-dot--online', Boolean(isOnline));
+        statusDot.classList.toggle('api-status-dot--offline', !isOnline);
+        statusDot.setAttribute('title', isOnline ? 'API connected' : 'API disconnected');
+    };
+
+    const probeApiStatus = async () => {
+        try {
+            const response = await fetch(CHAT_PROXY_ENDPOINT, { method: 'OPTIONS' });
+            const ok = response.status === 204 || response.status === 200;
+            setApiStatus(ok);
+            if (!ok) {
+                embeddingAvailable = false;
+                chatAvailable = false;
+            }
+        } catch {
+            setApiStatus(false);
+            embeddingAvailable = false;
+            chatAvailable = false;
+        }
+    };
 
     const cosineSimilarity = (A = [], B = []) => {
         if (!Array.isArray(A) || !Array.isArray(B) || A.length === 0 || A.length !== B.length) return 0;
@@ -852,9 +875,11 @@ KNOWLEDGE BOUNDARY:
         if (!response.ok) {
             if (response.status === 404 || response.status === 405 || response.status === 501) {
                 embeddingAvailable = false;
+                setApiStatus(false);
             }
             throw new Error(`Embedding API lỗi: ${response.status}`);
         }
+        setApiStatus(true);
         const payload = await response.json();
         return Array.isArray(payload?.embedding) ? payload.embedding : [];
     };
@@ -904,10 +929,12 @@ KNOWLEDGE BOUNDARY:
         if (!response.ok) {
             if (response.status === 404 || response.status === 405 || response.status === 501) {
                 chatAvailable = false;
+                setApiStatus(false);
                 return contexts.length ? contexts[0].content : FALLBACK_MESSAGE;
             }
             throw new Error(`Chat API lỗi: ${response.status}`);
         }
+        setApiStatus(true);
         const payload = await response.json();
         return (payload?.text || '').trim();
     };
@@ -955,6 +982,7 @@ KNOWLEDGE BOUNDARY:
     updateQuotaDisplay();
     restoreSession();
     loadDatabase();
+    probeApiStatus();
 }
 
 // =============================================

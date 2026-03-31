@@ -1157,6 +1157,24 @@ p {
 
 /* === Chatbot === */
 
+.api-status-dot {
+    display: inline-block;
+    width: .65rem;
+    height: .65rem;
+    border-radius: 50%;
+    margin-right: .5rem;
+    vertical-align: middle;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .08);
+}
+
+.api-status-dot--online {
+    background: #16a34a;
+}
+
+.api-status-dot--offline {
+    background: #dc2626;
+}
+
 .chatbot-subtitle {
     font-size: .82rem;
     font-weight: 600;
