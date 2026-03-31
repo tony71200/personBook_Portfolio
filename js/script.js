@@ -697,6 +697,8 @@ KNOWLEDGE BOUNDARY:
 
     let requestLogs = [];
     let knowledgeBase = [];
+    let embeddingAvailable = true;
+    let chatAvailable = true;
 
     const cosineSimilarity = (A = [], B = []) => {
         if (!Array.isArray(A) || !Array.isArray(B) || A.length === 0 || A.length !== B.length) return 0;
@@ -825,31 +827,70 @@ KNOWLEDGE BOUNDARY:
         }
     };
 
+    const keywordSearch = (query, topK = 3) => {
+        const terms = (query || '').toLowerCase().split(/\s+/).filter(Boolean);
+        if (!terms.length) return [];
+
+        return knowledgeBase
+            .map(item => {
+                const text = `${item.id} ${item.category} ${item.content}`.toLowerCase();
+                const matches = terms.reduce((sum, term) => sum + (text.includes(term) ? 1 : 0), 0);
+                const score = matches / terms.length;
+                return { ...item, score };
+            })
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, topK);
+    };
+
     const getEmbedding = async (text) => {
         const response = await fetch(CHAT_PROXY_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mode: 'embed', text })
         });
-        if (!response.ok) throw new Error(`Embedding API lỗi: ${response.status}`);
+        if (!response.ok) {
+            if (response.status === 404 || response.status === 405 || response.status === 501) {
+                embeddingAvailable = false;
+            }
+            throw new Error(`Embedding API lỗi: ${response.status}`);
+        }
         const payload = await response.json();
         return Array.isArray(payload?.embedding) ? payload.embedding : [];
     };
 
     const semanticSearch = async (query, topK = 3) => {
         if (!knowledgeBase.length) return [];
-        const queryVector = await getEmbedding(query);
-        if (!queryVector.length) return [];
 
-        return knowledgeBase
-            .filter(item => Array.isArray(item.vector) && item.vector.length === queryVector.length)
-            .map(item => ({ ...item, score: cosineSimilarity(queryVector, item.vector) }))
-            .sort((a, b) => b.score - a.score)
-            .slice(0, topK)
-            .filter(item => item.score > 0.3);
+        if (!embeddingAvailable) {
+            return keywordSearch(query, topK);
+        }
+
+        try {
+            const queryVector = await getEmbedding(query);
+            if (!queryVector.length) return keywordSearch(query, topK);
+
+            const vectorResults = knowledgeBase
+                .filter(item => Array.isArray(item.vector) && item.vector.length === queryVector.length)
+                .map(item => ({ ...item, score: cosineSimilarity(queryVector, item.vector) }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, topK)
+                .filter(item => item.score > 0.3);
+
+            return vectorResults.length ? vectorResults : keywordSearch(query, topK);
+        } catch (error) {
+            if (String(error?.message || '').includes('Embedding API lỗi')) {
+                return keywordSearch(query, topK);
+            }
+            throw error;
+        }
     };
 
     const askChatbot = async (question, contexts) => {
+        if (!chatAvailable) {
+            return contexts.length ? contexts[0].content : FALLBACK_MESSAGE;
+        }
+
         const response = await fetch(CHAT_PROXY_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -860,7 +901,13 @@ KNOWLEDGE BOUNDARY:
                 context: contexts.map(item => `[${item.id}] ${item.content}`).join('\n')
             })
         });
-        if (!response.ok) throw new Error(`Chat API lỗi: ${response.status}`);
+        if (!response.ok) {
+            if (response.status === 404 || response.status === 405 || response.status === 501) {
+                chatAvailable = false;
+                return contexts.length ? contexts[0].content : FALLBACK_MESSAGE;
+            }
+            throw new Error(`Chat API lỗi: ${response.status}`);
+        }
         const payload = await response.json();
         return (payload?.text || '').trim();
     };
@@ -893,7 +940,9 @@ KNOWLEDGE BOUNDARY:
                 await typeText('bot', answer || FALLBACK_MESSAGE);
             }
         } catch (error) {
-            console.error('Chatbot error', error);
+            if (!String(error?.message || '').includes('Embedding API lỗi: 405')) {
+                console.error('Chatbot error', error);
+            }
             thinkingElement.remove();
             await typeText('bot', 'Dạ, hiện tại hệ thống đang bận. Anh/Chị thử lại sau ít phút giúp em nhé.');
         } finally {
