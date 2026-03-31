@@ -1,6 +1,7 @@
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+const EMBEDDING_MODELS = ['gemini-embedding-001', 'text-embedding-004'];
 
 const DEFAULT_FALLBACK = 'Dạ, hiện tại em chưa có thông tin chi tiết về phần này trong hồ sơ. Anh/Chị có muốn biết thêm về các dự án Computer Vision của em không?';
 
@@ -22,21 +23,30 @@ function reject(res, code, message) {
 }
 
 async function runEmbedding(text) {
-  const response = await fetch(`${GEMINI_BASE}/text-embedding-004:embedContent?key=${GEMINI_API_KEY}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      content: { parts: [{ text }] }
-    })
-  });
+  let lastError = null;
 
-  if (!response.ok) {
+  for (const model of EMBEDDING_MODELS) {
+    const response = await fetch(`${GEMINI_BASE}/${model}:embedContent?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: { parts: [{ text }] }
+      })
+    });
+
+    if (response.ok) {
+      const payload = await response.json();
+      return payload?.embedding?.values || [];
+    }
+
     const detail = await response.text();
-    throw new Error(`Embedding failed: ${response.status} - ${detail}`);
+    lastError = `Embedding failed on ${model}: ${response.status} - ${detail}`;
+    if (response.status !== 404) {
+      throw new Error(lastError);
+    }
   }
 
-  const payload = await response.json();
-  return payload?.embedding?.values || [];
+  throw new Error(lastError || 'Embedding failed on all candidate models.');
 }
 
 async function runChat(message, context, systemInstruction) {

@@ -121,6 +121,11 @@ Kết quả:
 - Cập nhật `data/database.json`
 - Cập nhật `data/database.local.js`
 
+
+### Ghi chú model embedding (03/2026)
+
+Script `scripts/generate_vectors.js` hiện ưu tiên model `gemini-embedding-001` và tự fallback sang `text-embedding-004` nếu project cũ còn hỗ trợ.
+
 ## B. Dùng cho chatbot runtime (an toàn)
 
 - Frontend gọi `/api/chat`.
