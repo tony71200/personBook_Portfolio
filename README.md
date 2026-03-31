@@ -25,3 +25,13 @@ Trang 9 đã tích hợp chatbot RAG tại `.chatbot-box` với mô hình Gemini
 
 - Frontend theo dõi giới hạn 15 RPM bằng `localStorage` key `gemini_quota`.
 - Lịch sử chat trong phiên được lưu bằng `sessionStorage` key `chat_session_history`.
+
+
+### Chạy trực tiếp bằng file:// (double-click index.html)
+
+Một số trình duyệt chặn `fetch()` tới JSON khi chạy bằng `file://`. Dự án đã bổ sung fallback:
+
+- `js/data.local.js` -> gán `window.__PORTFOLIO_DATA__`
+- `data/database.local.js` -> gán `window.__CHATBOT_DATABASE__`
+
+Hai file này đã được include sẵn trong `index.html` nên trang vẫn hoạt động khi mở local file.

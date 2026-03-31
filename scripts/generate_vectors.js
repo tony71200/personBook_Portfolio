@@ -11,6 +11,7 @@ const path = require('node:path');
 const MODEL = 'text-embedding-004';
 const INPUT_FILE = path.join(process.cwd(), 'data', 'raw_data.json');
 const OUTPUT_FILE = path.join(process.cwd(), 'data', 'database.json');
+const OUTPUT_LOCAL_FILE = path.join(process.cwd(), 'data', 'database.local.js');
 
 async function embed(text, apiKey) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:embedContent?key=${apiKey}`;
@@ -47,7 +48,8 @@ async function embed(text, apiKey) {
   }
 
   await fs.writeFile(OUTPUT_FILE, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-  process.stdout.write(`Saved ${output.length} chunks to ${OUTPUT_FILE}\n`);
+  await fs.writeFile(OUTPUT_LOCAL_FILE, `window.__CHATBOT_DATABASE__ = ${JSON.stringify(output)};\n`, 'utf8');
+  process.stdout.write(`Saved ${output.length} chunks to ${OUTPUT_FILE} and ${OUTPUT_LOCAL_FILE}\n`);
 })().catch((error) => {
   console.error(error.message || error);
   process.exit(1);

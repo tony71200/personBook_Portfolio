@@ -804,6 +804,13 @@ KNOWLEDGE BOUNDARY:
     };
 
     const loadDatabase = async () => {
+        const isFileProtocol = window.location.protocol === 'file:';
+        if (isFileProtocol && Array.isArray(window.__CHATBOT_DATABASE__)) {
+            knowledgeBase = window.__CHATBOT_DATABASE__;
+            console.info('Loaded chatbot database from inline fallback (file:// mode).');
+            return;
+        }
+
         try {
             const response = await fetch(DATABASE_URL, { cache: 'no-cache' });
             if (!response.ok) throw new Error(`Không tải được database: ${response.status}`);
@@ -811,6 +818,9 @@ KNOWLEDGE BOUNDARY:
             knowledgeBase = Array.isArray(payload) ? payload : [];
         } catch (error) {
             console.error('Load database.json thất bại', error);
+            if (isFileProtocol) {
+                console.error('Tip: file:// chặn fetch JSON. Hãy mở qua HTTP hoặc nạp ./data/database.local.js trước js/script.js.');
+            }
             knowledgeBase = [];
         }
     };
